@@ -147,7 +147,6 @@ CREATE TABLE tracking_events
             ON DELETE SET NULL
 );
 
-
 CREATE INDEX idx_shipments_sender_id
     ON shipments (sender_id);
 
