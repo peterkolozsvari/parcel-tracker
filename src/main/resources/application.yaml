@@ -1,10 +1,12 @@
 spring:
   application:
     name: parcel-tracker
-datasource:
-  url: jdbc:postgresql://localhost:5432/parcel_tracker
-  username: ${DB_USERNAME:postgres}
-  password: ${DB_PASSWORD:root}
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/parcel_tracker
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:

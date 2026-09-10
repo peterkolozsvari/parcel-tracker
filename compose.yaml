@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: parcel-tracker-db
+    environment:
+      POSTGRES_DB: parcel_tracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    volumes:
+      - parcel-tracker-data:/var/lib/postgresql/data
+
+volumes:
+  parcel-tracker-data:
