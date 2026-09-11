@@ -1,5 +1,10 @@
 package hu.kolozsvaripeter.parceltracker.service;
 
+import hu.kolozsvaripeter.parceltracker.domain.User;
+import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
+import hu.kolozsvaripeter.parceltracker.enums.Role;
+import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,5 +13,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+
+    public void createUser(CreateUserCommandDto command) {
+        if (userRepository.existsByEmailIgnoreCase(command.email())) {
+            throw new IllegalArgumentException(
+                    "A user with this email already exists");
+        }
+
+        String passwordHash = passwordEncoder.encode(command.password());
+
+        User user = new User(
+                command.email(),
+                passwordHash,
+                command.fullName(),
+                command.phone(),
+                Role.CUSTOMER
+        );
+
+        userRepository.save(user);
+    }
 }
