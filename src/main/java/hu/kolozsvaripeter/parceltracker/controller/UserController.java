@@ -2,6 +2,7 @@ package hu.kolozsvaripeter.parceltracker.controller;
 
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
 import hu.kolozsvaripeter.parceltracker.service.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserCommandDto command) {
-        log.info("create User: {}", command);
+    public ResponseEntity<Void> createUser(@RequestBody @Valid CreateUserCommandDto command) {
+        log.info("create User: {}", command.fullName());
         userService.createUser(command);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
