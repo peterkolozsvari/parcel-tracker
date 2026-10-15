@@ -23,7 +23,7 @@ public class User {
     private String fullName;
 
     @Column(length = 30)
-    private String phone;
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
@@ -42,11 +42,11 @@ public class User {
     }
 
     public User(String email, String passwordHash,
-            String fullName, String phone, Role role) {
+                String fullName, String phoneNumber, Role role) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.fullName = fullName;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
         this.role = role;
         this.active = true;
     }
@@ -95,12 +95,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phone) {
+        this.phoneNumber = phone;
     }
 
     public Role getRole() {

@@ -30,6 +30,6 @@ public record CreateUserCommandDto(
                 max = 30,
                 message = "Phone number must not exceed 30 characters"
         )
-        String phone
+        String phoneNumber
 ) {
 }

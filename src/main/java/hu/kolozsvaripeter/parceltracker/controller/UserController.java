@@ -1,6 +1,7 @@
 package hu.kolozsvaripeter.parceltracker.controller;
 
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -27,4 +28,12 @@ public class UserController {
         userService.createUser(command);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDetailsDto> getUserById(@PathVariable Long id) {
+        log.info("User is requested: {}", id);
+        UserDetailsDto user = userService.getUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 }
