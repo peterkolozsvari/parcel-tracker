@@ -59,9 +59,11 @@ public class UserService {
         );
     }
 
-    public void updateUser(@Valid Long id, UpdateUserProfileDto command) {
+    public void updateUser(Long id, UpdateUserProfileDto command) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+
+
 
         user.setFullName(command.fullName());
         user.setPhoneNumber(command.phoneNumber());

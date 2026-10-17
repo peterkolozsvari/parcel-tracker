@@ -39,7 +39,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody @Valid  UpdateUserProfileDto command) {
-        log.info("update User: {}", command);
+        log.info("update User: {}", id);
         userService.updateUser(id, command);
         return new ResponseEntity<>(HttpStatus.OK);
     }
