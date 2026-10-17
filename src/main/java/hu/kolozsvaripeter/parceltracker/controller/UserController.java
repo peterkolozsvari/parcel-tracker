@@ -1,6 +1,7 @@
 package hu.kolozsvaripeter.parceltracker.controller;
 
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
+import hu.kolozsvaripeter.parceltracker.dto.incoming.UpdateUserProfileDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.service.UserService;
 import jakarta.validation.Valid;
@@ -34,6 +35,13 @@ public class UserController {
         log.info("User is requested: {}", id);
         UserDetailsDto user = userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody @Valid  UpdateUserProfileDto command) {
+        log.info("update User: {}", command);
+        userService.updateUser(id, command);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

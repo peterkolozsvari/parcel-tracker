@@ -2,10 +2,12 @@ package hu.kolozsvaripeter.parceltracker.service;
 
 import hu.kolozsvaripeter.parceltracker.domain.User;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
+import hu.kolozsvaripeter.parceltracker.dto.incoming.UpdateUserProfileDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.enums.Role;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,5 +57,14 @@ public class UserService {
                 user.getRole(),
                 user.isActive()
         );
+    }
+
+    public void updateUser(@Valid Long id, UpdateUserProfileDto command) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+
+        user.setFullName(command.fullName());
+        user.setPhoneNumber(command.phoneNumber());
+        userRepository.save(user);
     }
 }
