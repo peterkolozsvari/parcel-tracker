@@ -4,6 +4,7 @@ import hu.kolozsvaripeter.parceltracker.domain.User;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.enums.Role;
+import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class UserService {
 
     public UserDetailsDto getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
         return new UserDetailsDto(
                 user.getId(),

@@ -87,4 +87,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, status);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
+        logger.error("User not found ", ex);
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        ApiError body = new ApiError("USER_NOT_FOUND", "The requested user was not found", ex.getLocalizedMessage());
+
+        return new ResponseEntity<>(body, status);
+    }
 }

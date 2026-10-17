@@ -22,7 +22,7 @@ public class User {
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Column(length = 30)
+    @Column(name = "phone", length = 30)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
