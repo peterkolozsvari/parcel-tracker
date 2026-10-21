@@ -63,10 +63,13 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
+        if (command.fullName() != null) {
+            user.setFullName(command.fullName());
+        }
+        if (command.phoneNumber() != null) {
+            user.setPhoneNumber(command.phoneNumber());
+        }
 
-
-        user.setFullName(command.fullName());
-        user.setPhoneNumber(command.phoneNumber());
         userRepository.save(user);
     }
 }
