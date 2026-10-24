@@ -11,16 +11,16 @@ public record CreateShipmentDto(
         @Positive(message = "Sender ID must be greater than zero")
         Long senderId,
 
+        @NotNull(message = "Pickup address is required")
+        @Valid
+        CreateAddressDto pickupAddress,
+
         @NotBlank(message = "Receiver name is required")
         @Size(
                 max = 100,
                 message = "Receiver name must not exceed 100 characters"
         )
         String receiverName,
-
-        @NotNull(message = "Pickup address is required")
-        @Valid
-        CreateAddressDto pickupAddress,
 
         @NotNull(message = "Delivery address is required")
         @Valid
