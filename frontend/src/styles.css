@@ -1,0 +1,20 @@
+:root {
+  color-scheme: light;
+
+  --page-bg: #fff;
+  --header-bg: #fff;
+  --text-primary: #253539;
+  --text-secondary: #35464a;
+  --text-muted: #526467;
+  --border: #d4e3e3;
+  --surface-soft: #eef5f5;
+  --surface-hover: #dcecec;
+  --accent: #007f82;
+  --accent-hover: #006568;
+  --on-accent: #fff;
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text-primary);
+}
