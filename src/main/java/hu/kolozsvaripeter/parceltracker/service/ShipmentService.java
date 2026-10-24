@@ -4,6 +4,7 @@ import hu.kolozsvaripeter.parceltracker.domain.*;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateAddressDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateParcelDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
 import hu.kolozsvaripeter.parceltracker.enums.ShipmentStatus;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.*;
@@ -32,18 +33,18 @@ public class ShipmentService {
     }
 
 
-    public void createShipment(CreateShipmentDto command) {
+    public CreateShipmentResponseDto createShipment(CreateShipmentDto command) {
         User sender = findSender(command.senderId());
 
         Address pickupAddress = saveAddress(command.pickupAddress());
         Address deliveryAddress = saveAddress(command.deliveryAddress());
 
-        Shipment shipment = saveShipment(
-                command, sender, pickupAddress, deliveryAddress
-        );
+        Shipment shipment = saveShipment(command, sender, pickupAddress, deliveryAddress);
 
         saveParcels(command.parcels(), shipment);
         saveInitialTrackingEvent(shipment, sender);
+
+        return new CreateShipmentResponseDto(shipment.getId(), shipment.getTrackingNumber());
     }
 
     private User findSender(Long senderId) {

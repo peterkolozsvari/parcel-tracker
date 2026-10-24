@@ -1,7 +1,7 @@
 package hu.kolozsvaripeter.parceltracker.controller;
 
-import hu.kolozsvaripeter.parceltracker.domain.Shipment;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
 import hu.kolozsvaripeter.parceltracker.service.ShipmentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -25,10 +25,11 @@ public class ShipmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createShipment(@RequestBody @Valid CreateShipmentDto command) {
+    public ResponseEntity<CreateShipmentResponseDto> createShipment(@RequestBody @Valid CreateShipmentDto command) {
         log.info("create Shipment: {}", command);
-        shipmentService.createShipment(command);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        CreateShipmentResponseDto response =
+                shipmentService.createShipment(command);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 }
