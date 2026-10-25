@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -48,6 +47,48 @@ public class ShipmentService {
         saveInitialTrackingEvent(shipment, sender);
 
         return new CreateShipmentResponseDto(shipment.getId(), shipment.getTrackingNumber());
+    }
+
+    public ShipmentDetailsDto getShipmentById(Long id) {
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new ShipmentNotFoundException(
+                        "Shipment not found with id: " + id
+                ));
+
+        return toShipmentDetailsDto(shipment);
+    }
+
+    public ShipmentDetailsDto getShipmentByTrackingNumber(String trackingNumber) {
+        Shipment shipment = shipmentRepository.findByTrackingNumber(trackingNumber)
+                .orElseThrow(() -> new ShipmentNotFoundException(
+                        "Shipment not found with tracking number: " + trackingNumber
+                ));
+
+        return toShipmentDetailsDto(shipment);
+    }
+
+    private ShipmentDetailsDto toShipmentDetailsDto(Shipment shipment) {
+        List<ParcelDetailsDto> parcels = parcelRepository
+                .findAllByShipmentId(shipment.getId())
+                .stream()
+                .map(this::toParcelDetailsDto)
+                .toList();
+
+        return new ShipmentDetailsDto(
+                shipment.getId(),
+                shipment.getTrackingNumber(),
+                shipment.getStatus(),
+                toUserDetailsDto(shipment.getSender()),
+                shipment.getCourier() == null
+                        ? null
+                        : toUserDetailsDto(shipment.getCourier()),
+                shipment.getReceiverName(),
+                toAddressDetailsDto(shipment.getPickupAddress()),
+                toAddressDetailsDto(shipment.getDeliveryAddress()),
+                parcels,
+                shipment.getCreatedAt(),
+                shipment.getUpdatedAt()
+        );
     }
 
     private User findSender(Long senderId) {
@@ -130,34 +171,6 @@ public class ShipmentService {
         return trackingNumber.toString();
     }
 
-    public ShipmentDetailsDto getShipmentById(Long id) {
-        Shipment shipment = shipmentRepository.findById(id)
-                .orElseThrow(() -> new ShipmentNotFoundException(
-                        "Shipment not found with id: " + id
-                ));
-
-        List<ParcelDetailsDto> parcels = parcelRepository
-                .findAllByShipmentId(id)
-                .stream()
-                .map(this::toParcelDetailsDto)
-                .toList();
-
-        return new ShipmentDetailsDto(
-                shipment.getId(),
-                shipment.getTrackingNumber(),
-                shipment.getStatus(),
-                toUserDetailsDto(shipment.getSender()),
-                shipment.getCourier() == null
-                        ? null
-                        : toUserDetailsDto(shipment.getCourier()),
-                shipment.getReceiverName(),
-                toAddressDetailsDto(shipment.getPickupAddress()),
-                toAddressDetailsDto(shipment.getDeliveryAddress()),
-                parcels,
-                shipment.getCreatedAt(),
-                shipment.getUpdatedAt()
-        );
-    }
 
     private UserDetailsDto toUserDetailsDto(User user) {
         return new UserDetailsDto(

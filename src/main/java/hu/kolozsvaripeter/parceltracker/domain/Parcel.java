@@ -30,6 +30,10 @@ public class Parcel {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Shipment getShipment() {
         return shipment;
     }

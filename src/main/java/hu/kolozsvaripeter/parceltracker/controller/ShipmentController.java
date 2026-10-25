@@ -38,10 +38,10 @@ public class ShipmentController {
         return new ResponseEntity<>(shipment, HttpStatus.OK);
     }
 
-//    @GetMapping("/tracking/{trackingNumber}")
-//    public ResponseEntity<ShipmentDetailsDto> getShipmentByTrackingNumber(@PathVariable Long id) {
-//        log.info("Shipment is requested: {}", id);
-//        ShipmentDetailsDto shipment = shipmentService.getShipmentById(id);
-//        return new ResponseEntity<>(shipment, HttpStatus.OK);
-//    }
+    @GetMapping("/tracking/{trackingNumber}")
+    public ResponseEntity<ShipmentDetailsDto> getShipmentByTrackingNumber(String trackingNumber) {
+        log.info("Shipment is requested: {}", trackingNumber);
+        ShipmentDetailsDto shipment = shipmentService.getShipmentByTrackingNumber(trackingNumber);
+        return new ResponseEntity<>(shipment, HttpStatus.OK);
+}
 }
