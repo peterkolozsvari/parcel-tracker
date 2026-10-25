@@ -4,8 +4,9 @@ import hu.kolozsvaripeter.parceltracker.domain.*;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateAddressDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateParcelDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
-import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.*;
 import hu.kolozsvaripeter.parceltracker.enums.ShipmentStatus;
+import hu.kolozsvaripeter.parceltracker.exception.ShipmentNotFoundException;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.*;
 import org.springframework.stereotype.Service;
@@ -129,5 +130,63 @@ public class ShipmentService {
         return trackingNumber.toString();
     }
 
+    public ShipmentDetailsDto getShipmentById(Long id) {
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new ShipmentNotFoundException(
+                        "Shipment not found with id: " + id
+                ));
 
+        List<ParcelDetailsDto> parcels = parcelRepository
+                .findAllByShipmentId(id)
+                .stream()
+                .map(this::toParcelDetailsDto)
+                .toList();
+
+        return new ShipmentDetailsDto(
+                shipment.getId(),
+                shipment.getTrackingNumber(),
+                shipment.getStatus(),
+                toUserDetailsDto(shipment.getSender()),
+                shipment.getCourier() == null
+                        ? null
+                        : toUserDetailsDto(shipment.getCourier()),
+                shipment.getReceiverName(),
+                toAddressDetailsDto(shipment.getPickupAddress()),
+                toAddressDetailsDto(shipment.getDeliveryAddress()),
+                parcels,
+                shipment.getCreatedAt(),
+                shipment.getUpdatedAt()
+        );
+    }
+
+    private UserDetailsDto toUserDetailsDto(User user) {
+        return new UserDetailsDto(
+                user.getId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getRole(),
+                user.isActive()
+        );
+    }
+
+    private AddressDetailsDto toAddressDetailsDto(Address address) {
+        return new AddressDetailsDto(
+                address.getCountry(),
+                address.getPostalCode(),
+                address.getCity(),
+                address.getStreet(),
+                address.getHouseNumber(),
+                address.getDoor()
+        );
+    }
+
+    private ParcelDetailsDto toParcelDetailsDto(Parcel parcel) {
+        return new ParcelDetailsDto(
+                parcel.getId(),
+                parcel.getWeight(),
+                parcel.getDescription(),
+                parcel.isFragile()
+        );
+    }
 }

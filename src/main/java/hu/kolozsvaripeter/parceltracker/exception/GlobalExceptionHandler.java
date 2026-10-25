@@ -96,4 +96,14 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(body, status);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiError> handleShipmentNotFoundException(ShipmentNotFoundException ex) {
+        logger.warn("Shipment not found ", ex);
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        ApiError body = new ApiError("SHIPMENT_NOT_FOUND", "The requested shipment was not found", ex.getLocalizedMessage());
+
+        return new ResponseEntity<>(body, status);
+    }
 }

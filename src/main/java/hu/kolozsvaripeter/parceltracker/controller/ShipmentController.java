@@ -2,16 +2,15 @@ package hu.kolozsvaripeter.parceltracker.controller;
 
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentDetailsDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.service.ShipmentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/shipments")
@@ -32,4 +31,17 @@ public class ShipmentController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ShipmentDetailsDto> getShipmentById(@PathVariable Long id) {
+        log.info("Shipment is requested: {}", id);
+        ShipmentDetailsDto shipment = shipmentService.getShipmentById(id);
+        return new ResponseEntity<>(shipment, HttpStatus.OK);
+    }
+
+//    @GetMapping("/tracking/{trackingNumber}")
+//    public ResponseEntity<ShipmentDetailsDto> getShipmentByTrackingNumber(@PathVariable Long id) {
+//        log.info("Shipment is requested: {}", id);
+//        ShipmentDetailsDto shipment = shipmentService.getShipmentById(id);
+//        return new ResponseEntity<>(shipment, HttpStatus.OK);
+//    }
 }
