@@ -9,6 +9,8 @@ import hu.kolozsvaripeter.parceltracker.enums.ShipmentStatus;
 import hu.kolozsvaripeter.parceltracker.exception.ShipmentNotFoundException;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +67,17 @@ public class ShipmentService {
                 ));
 
         return toShipmentDetailsDto(shipment);
+    }
+
+    public Page<ShipmentListItemDto> getShipments(ShipmentStatus status, Long senderId, Pageable pageable) {
+        return shipmentRepository.findAllByFilters(status, senderId, pageable)
+                .map(shipment -> new ShipmentListItemDto(
+                        shipment.getId(),
+                        shipment.getTrackingNumber(),
+                        shipment.getReceiverName(),
+                        shipment.getStatus(),
+                        shipment.getCreatedAt()
+                ));
     }
 
     private ShipmentDetailsDto toShipmentDetailsDto(Shipment shipment) {
