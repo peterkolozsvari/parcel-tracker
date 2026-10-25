@@ -4,7 +4,6 @@ import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentDetailsDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentListItemDto;
-import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.enums.ShipmentStatus;
 import hu.kolozsvaripeter.parceltracker.service.ShipmentService;
 import jakarta.validation.Valid;

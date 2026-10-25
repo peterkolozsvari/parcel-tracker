@@ -1,1 +1,154 @@
-<p>create-shipment works!</p>
+<div class="container py-5">
+  <h1 class="mb-4">Küldemény feladása</h1>
+
+  <form [formGroup]="shipmentForm" (ngSubmit)="submit()">
+    <section class="card mb-4">
+      <div class="card-body">
+        <h2 class="h4 mb-3">Címzett</h2>
+
+        <label for="receiverName" class="form-label">
+          Címzett neve
+        </label>
+
+        <input
+          id="receiverName"
+          type="text"
+          class="form-control"
+          formControlName="receiverName"
+          maxlength="100"
+          [class.is-invalid]="isInvalid('receiverName')"
+        >
+
+        @if (isInvalid('receiverName')) {
+          <div class="invalid-feedback">
+            Add meg a címzett nevét, legfeljebb 100 karakterrel.
+          </div>
+        }
+      </div>
+    </section>
+
+    @for (section of addressSections; track section.name) {
+      <section class="card mb-4" [formGroupName]="section.name">
+        <div class="card-body">
+          <h2 class="h4 mb-3">{{ section.title }}</h2>
+
+          <div class="row g-3">
+            @for (field of addressFields; track field.name) {
+              <div class="col-12 col-md-6">
+                <label
+                  [for]="section.name + '-' + field.name"
+                  class="form-label"
+                >
+                  {{ field.label }}
+                </label>
+
+                <input
+                  [id]="section.name + '-' + field.name"
+                  type="text"
+                  class="form-control"
+                  [formControlName]="field.name"
+                  [attr.maxlength]="field.maxLength"
+                  [class.is-invalid]="
+                    isInvalid(section.name + '.' + field.name)
+                  "
+                >
+
+                @if (isInvalid(section.name + '.' + field.name)) {
+                  <div class="invalid-feedback">
+                    Töltsd ki a mezőt, legfeljebb
+                    {{ field.maxLength }} karakterrel.
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+    <section class="card mb-4">
+      <div class="card-body">
+        <h2 class="h4 mb-3">Csomagok</h2>
+
+        <div formArrayName="parcels">
+          @for (parcel of parcels.controls; track parcel; let i = $index) {
+            <div class="border rounded p-3 mb-3" [formGroupName]="i">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="h5 mb-0">{{ i + 1 }}. csomag</h3>
+
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  [disabled]="parcels.length === 1"
+                  (click)="removeParcel(i)"
+                >
+                  Eltávolítás
+                </button>
+              </div>
+
+              <div class="mb-3">
+                <label [for]="'weight-' + i" class="form-label">
+                  Súly (kg)
+                </label>
+
+                <input
+                  [id]="'weight-' + i"
+                  type="number"
+                  class="form-control"
+                  formControlName="weight"
+                  min="0.01"
+                  step="0.01"
+                  [class.is-invalid]="isInvalid('parcels.' + i + '.weight')"
+                >
+
+                @if (isInvalid('parcels.' + i + '.weight')) {
+                  <div class="invalid-feedback">
+                    Adj meg legalább 0,01 kg súlyt.
+                  </div>
+                }
+              </div>
+
+              <div class="mb-3">
+                <label [for]="'description-' + i" class="form-label">
+                  Leírás
+                </label>
+
+                <textarea
+                  [id]="'description-' + i"
+                  class="form-control"
+                  formControlName="description"
+                  rows="2"
+                ></textarea>
+              </div>
+
+              <div class="form-check">
+                <input
+                  [id]="'fragile-' + i"
+                  type="checkbox"
+                  class="form-check-input"
+                  formControlName="fragile"
+                >
+
+                <label [for]="'fragile-' + i" class="form-check-label">
+                  Törékeny
+                </label>
+              </div>
+            </div>
+          }
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="addParcel()"
+        >
+          + Új csomag
+        </button>
+      </div>
+    </section>
+
+    <button type="submit" class="btn btn-primary btn-lg">
+      Küldemény feladása
+    </button>
+  </form>
+</div>
