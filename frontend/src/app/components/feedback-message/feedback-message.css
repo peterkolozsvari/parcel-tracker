@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.feedback {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+.success {
+  background-color: #ecfdf3;
+  border-color: #86d4a5;
+  color: #14532d;
+}
+
+.error {
+  background-color: #fff1f2;
+  border-color: #f0a3ad;
+  color: #881337;
+}

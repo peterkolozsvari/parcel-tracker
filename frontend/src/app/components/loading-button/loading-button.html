@@ -1,0 +1,12 @@
+<button
+  type="button"
+  [disabled]="loading() || disabled()"
+  [attr.aria-busy]="loading()"
+  (click)="activated.emit()"
+>
+  @if (loading()) {
+    <span class="spinner" aria-hidden="true"></span>
+  }
+
+  {{ loading() ? loadingLabel() : label() }}
+</button>
