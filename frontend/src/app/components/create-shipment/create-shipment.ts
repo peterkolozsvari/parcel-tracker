@@ -1,14 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {FormArray, FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ShipmentService} from '../../services/shipment.service';
+import { CreateShipment as CreateShipmentCommand } from '../../models/shipment.model';
 
 @Component({
   selector: 'app-create-shipment',
   imports: [ReactiveFormsModule],
   templateUrl: './create-shipment.html',
-  styleUrl: './create-shipment.scss'
+  styleUrl: './create-shipment.css'
 })
 export class CreateShipment {
   private readonly fb = inject(FormBuilder);
+  private readonly shipmentService = inject(ShipmentService);
 
   readonly addressSections = [
     { name: 'pickupAddress', title: 'Felvételi cím' },
@@ -89,6 +92,27 @@ export class CreateShipment {
       return;
     }
 
-    console.log(this.shipmentForm.getRawValue());
+    const formValue = this.shipmentForm.getRawValue();
+
+    const command: CreateShipmentCommand = {
+      senderId: 1,
+      receiverName: formValue.receiverName,
+      pickupAddress: formValue.pickupAddress,
+      deliveryAddress: formValue.deliveryAddress,
+      parcels: formValue.parcels.map(parcel => ({
+        weight: parcel.weight!,
+        description: parcel.description,
+        fragile: parcel.fragile
+      }))
+    };
+
+    this.shipmentService.createShipment(command).subscribe({
+      next: response => {
+        console.log('Küldemény létrehozva:', response);
+      },
+      error: error => {
+        console.error('Sikertelen küldeményfeladás:', error);
+      }
+    });
   }
 }
