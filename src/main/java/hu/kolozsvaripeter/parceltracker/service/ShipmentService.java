@@ -11,6 +11,7 @@ import hu.kolozsvaripeter.parceltracker.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class ShipmentService {
     private final ShipmentRepository shipmentRepository;
     private final ParcelRepository parcelRepository;
     private final TrackingEventRepository trackingEventRepository;
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     public ShipmentService(UserRepository userRepository, AddressRepository addressRepository, ShipmentRepository shipmentRepository, ParcelRepository parcelRepository, TrackingEventRepository trackingEventRepository) {
         this.userRepository = userRepository;
@@ -73,7 +75,7 @@ public class ShipmentService {
             Address deliveryAddress) {
 
         Shipment shipment = new Shipment();
-        shipment.setTrackingNumber("PT-" + UUID.randomUUID());
+        shipment.setTrackingNumber(generateTrackingNumber());
         shipment.setSender(sender);
         shipment.setPickupAddress(pickupAddress);
         shipment.setDeliveryAddress(deliveryAddress);
@@ -110,4 +112,22 @@ public class ShipmentService {
 
         trackingEventRepository.save(event);
     }
+
+    private String generateTrackingNumber(){
+        String characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        StringBuilder trackingNumber = new StringBuilder();
+
+        for (int i = 0; i < 10; i++) {
+
+            int index = RANDOM.nextInt(characters.length());
+            char character = characters.charAt(index);
+            trackingNumber.append(character);
+        }
+        if (shipmentRepository.existsByTrackingNumber(trackingNumber.toString())) {
+            return generateTrackingNumber();
+        }
+        return trackingNumber.toString();
+    }
+
+
 }
