@@ -3,6 +3,9 @@ package hu.kolozsvaripeter.parceltracker.controller;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.LoginDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.service.AuthService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -48,10 +51,17 @@ public class AuthController {
     }
 
     @GetMapping("/csrf")
-    public CsrfToken csrf(CsrfToken csrfToken) {
+    public CsrfToken csrf(@Parameter(hidden = true) CsrfToken csrfToken) {
         return csrfToken;
     }
 
+    @Parameter(
+            name = "X-CSRF-TOKEN",
+            in = ParameterIn.HEADER,
+            required = true,
+            description = "Token returned by GET /api/auth/csrf",
+            schema = @Schema(type = "string")
+    )
     @PostMapping("/login")
     public ResponseEntity<Void> login(
             @RequestBody @Valid LoginDto command,
