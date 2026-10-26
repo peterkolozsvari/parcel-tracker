@@ -1,37 +1,74 @@
 package hu.kolozsvaripeter.parceltracker.controller;
 
 import hu.kolozsvaripeter.parceltracker.dto.incoming.LoginDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.service.AuthService;
-import hu.kolozsvaripeter.parceltracker.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.csrf.CsrfAuthenticationStrategy;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UserService userService;
     private final AuthService authService;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    public AuthController(UserService userService, AuthService authService) {
-        this.userService = userService;
+    private final SecurityContextRepository securityContextRepository =
+            new HttpSessionSecurityContextRepository();
+
+    private final SessionAuthenticationStrategy sessionAuthenticationStrategy =
+            new ChangeSessionIdAuthenticationStrategy();
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
-
-    @PostMapping
-    public ResponseEntity<Void> loginUser(@RequestBody @Valid LoginDto command) {
-        log.info("User logged in: {}", command.email());
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/me")
+    public ResponseEntity<UserDetailsDto> getCurrentUser(
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(
+                authService.getCurrentUser(authentication.getName())
+        );
     }
 
+    @GetMapping("/csrf")
+    public CsrfToken csrf(CsrfToken csrfToken) {
+        return csrfToken;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(
+            @RequestBody @Valid LoginDto command,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        Authentication authentication = authService.login(command);
+
+        sessionAuthenticationStrategy.onAuthentication(
+                authentication, request, response
+        );
+
+        new CsrfAuthenticationStrategy(new HttpSessionCsrfTokenRepository())
+                .onAuthentication(authentication, request, response);
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(context);
+        securityContextRepository.saveContext(context, request, response);
+
+        return ResponseEntity.noContent().build();
+    }
 }
