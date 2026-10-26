@@ -2,12 +2,12 @@ import { Component, inject } from '@angular/core';
 import {FormArray, FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ShipmentService} from '../../services/shipment.service';
 import { CreateShipment as CreateShipmentCommand } from '../../models/shipment.model';
-import {Router, RouterLink} from '@angular/router';
+import {Router} from '@angular/router';
 import {form} from '@angular/forms/signals';
 
 @Component({
   selector: 'app-create-shipment',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './create-shipment.html',
   styleUrl: './create-shipment.css'
 })
