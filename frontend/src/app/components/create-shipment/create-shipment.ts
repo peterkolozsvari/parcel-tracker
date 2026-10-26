@@ -2,14 +2,17 @@ import { Component, inject } from '@angular/core';
 import {FormArray, FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ShipmentService} from '../../services/shipment.service';
 import { CreateShipment as CreateShipmentCommand } from '../../models/shipment.model';
+import {Router, RouterLink} from '@angular/router';
+import {form} from '@angular/forms/signals';
 
 @Component({
   selector: 'app-create-shipment',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './create-shipment.html',
   styleUrl: './create-shipment.css'
 })
 export class CreateShipment {
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly shipmentService = inject(ShipmentService);
 
@@ -63,7 +66,8 @@ export class CreateShipment {
     return this.fb.group({
       weight: this.fb.control<number | null>(null, [
         Validators.required,
-        Validators.min(0.01)
+        Validators.min(0.01),
+        Validators.pattern(/^\d+(\.\d{1,2})?$/)
       ]),
       description: this.fb.nonNullable.control(''),
       fragile: this.fb.nonNullable.control(false)
@@ -108,11 +112,15 @@ export class CreateShipment {
 
     this.shipmentService.createShipment(command).subscribe({
       next: response => {
-        console.log('Küldemény létrehozva:', response);
+        this.router.navigate(['/shipments/success'], {
+          queryParams: {trackingNumber: response.trackingNumber}
+        });
       },
       error: error => {
         console.error('Sikertelen küldeményfeladás:', error);
       }
     });
   }
+
+  protected readonly form = form;
 }

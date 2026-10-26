@@ -21,7 +21,7 @@
 
         @if (isInvalid('receiverName')) {
           <div class="invalid-feedback">
-            Add meg a címzett nevét, legfeljebb 100 karakterrel.
+            Add meg a címzett nevét
           </div>
         }
       </div>
@@ -55,8 +55,7 @@
 
                 @if (isInvalid(section.name + '.' + field.name)) {
                   <div class="invalid-feedback">
-                    Töltsd ki a mezőt, legfeljebb
-                    {{ field.maxLength }} karakterrel.
+                    Töltsd ki a mezőt
                   </div>
                 }
               </div>
@@ -103,7 +102,13 @@
 
                 @if (isInvalid('parcels.' + i + '.weight')) {
                   <div class="invalid-feedback">
-                    Adj meg legalább 0,01 kg súlyt.
+                    @if (parcel.get('weight')?.hasError('required')) {
+                      A súly megadása kötelező.
+                    } @else if (parcel.get('weight')?.hasError('min')) {
+                      A súly legalább 0,01 kg legyen.
+                    } @else if (parcel.get('weight')?.hasError('pattern')) {
+                      Legfeljebb két tizedesjegyet adj meg.
+                    }
                   </div>
                 }
               </div>
@@ -147,7 +152,8 @@
       </div>
     </section>
 
-    <button type="submit" class="btn btn-primary btn-lg">
+    <button type="submit"
+            class="btn btn-primary btn-lg">
       Küldemény feladása
     </button>
   </form>
