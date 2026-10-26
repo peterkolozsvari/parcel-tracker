@@ -17,8 +17,15 @@ export class ShipmentSuccessfullyCreated {
 
   readonly trackingNumber = this.route.snapshot.queryParamMap.get('trackingNumber');
 
-  copyTrackingNumber()
-  {
+  async copyTrackingNumber(): Promise<void> {
+    if (!this.trackingNumber) {
+      return;
+    }
 
+    try {
+      await navigator.clipboard.writeText(this.trackingNumber);
+    } catch (error) {
+      console.error('Nem sikerült a vágólapra másolni:', error);
+    }
   }
 }
