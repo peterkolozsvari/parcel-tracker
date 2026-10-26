@@ -44,6 +44,11 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/api/auth/csrf"
                         ).permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
 
