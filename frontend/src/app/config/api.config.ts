@@ -4,4 +4,5 @@ export const API_ENDPOINTS = {
   users: `${BASE_URL}/users`,
   shipments: `${BASE_URL}/shipments`,
   login: `${BASE_URL}/login`,
+  csrf: `${BASE_URL}/auth/csrf`,
 } as const;

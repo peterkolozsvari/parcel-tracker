@@ -39,8 +39,7 @@ export class Login {
 
     this.authService.login(command).subscribe({
       next: () => {
-        this.router.navigate(['/'], {
-        });
+        this.router.navigate(['/']);
       },
       error: error => {
         this.errorMessage = error.status === 401
