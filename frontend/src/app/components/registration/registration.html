@@ -169,6 +169,9 @@
         }
       </div>
 
+      @if (errorMessage) {
+        <p class="field-error" role="alert">{{ errorMessage }}</p>
+      }
       <button type="submit" class="registration-button">
         Regisztráció
       </button>

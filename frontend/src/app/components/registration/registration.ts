@@ -21,7 +21,7 @@ export class Registration {
     fullName: ['', [Validators.required, Validators.pattern(/\S+/)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
-    phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    phoneNumber: ['', Validators.maxLength(30)],
   });
 
   protected onSubmit() {
