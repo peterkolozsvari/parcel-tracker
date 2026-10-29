@@ -1,0 +1,182 @@
+<div class="registration-page">
+  <div class="registration-card">
+    <div class="registration-header">
+      <h1>Hozd létre a fiókod!</h1>
+      <p>Regisztrálj, és kezeld egy helyen a csomagjaidat.</p>
+    </div>
+
+    <form
+      [formGroup]="registrationForm"
+      (ngSubmit)="onSubmit()"
+      novalidate
+    >
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            formControlName="fullName"
+            autocomplete="name"
+            required
+            maxlength="100"
+            placeholder=" "
+            aria-describedby="fullName-error"
+          >
+          <label for="fullName">Teljes név</label>
+        </div>
+
+        @if (registrationForm.controls.fullName.touched) {
+          @if (registrationForm.controls.fullName.hasError('required')) {
+            <p class="field-error" id="fullName-error" role="alert">
+              Add meg a teljes neved!
+            </p>
+          } @else if (registrationForm.controls.fullName.hasError('maxlength')) {
+            <p class="field-error" id="fullName-error" role="alert">
+              A név legfeljebb 100 karakter lehet.
+            </p>
+          }
+        }
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            formControlName="email"
+            autocomplete="email"
+            autocapitalize="none"
+            spellcheck="false"
+            required
+            maxlength="255"
+            placeholder=" "
+            aria-describedby="email-error"
+          >
+          <label for="email">Email-cím</label>
+        </div>
+
+        @if (registrationForm.controls.email.touched) {
+          @if (registrationForm.controls.email.hasError('required')) {
+            <p class="field-error" id="email-error" role="alert">
+              Add meg az email-címed!
+            </p>
+          } @else if (registrationForm.controls.email.hasError('email')) {
+            <p class="field-error" id="email-error" role="alert">
+              Adj meg egy érvényes email-címet!
+            </p>
+          } @else if (registrationForm.controls.email.hasError('maxlength')) {
+            <p class="field-error" id="email-error" role="alert">
+              Az email-cím legfeljebb 255 karakter lehet.
+            </p>
+          }
+        }
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper password-wrapper">
+          <input
+            #passwordInput
+            type="password"
+            id="password"
+            name="password"
+            formControlName="password"
+            autocomplete="new-password"
+            required
+            minlength="8"
+            maxlength="72"
+            placeholder=" "
+            aria-describedby="password-help password-error"
+          >
+          <label for="password">Jelszó</label>
+
+          <button
+            type="button"
+            class="password-toggle"
+            [attr.aria-label]="passwordInput.type === 'password'
+              ? 'Jelszó megjelenítése'
+              : 'Jelszó elrejtése'"
+            [attr.aria-pressed]="passwordInput.type === 'text'"
+            (click)="passwordInput.type = passwordInput.type === 'password'
+              ? 'text'
+              : 'password'"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7C20.268 16.057 16.477 19 12 19s-8.268-2.943-9.542-7Z"
+              />
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <p class="field-hint" id="password-help">
+          A jelszó 8–72 karakter hosszú legyen.
+        </p>
+
+        @if (registrationForm.controls.password.touched) {
+          @if (registrationForm.controls.password.hasError('required')) {
+            <p class="field-error" id="password-error" role="alert">
+              Adj meg egy jelszót!
+            </p>
+          } @else if (registrationForm.controls.password.hasError('minlength')) {
+            <p class="field-error" id="password-error" role="alert">
+              A jelszó legalább 8 karakter legyen.
+            </p>
+          } @else if (registrationForm.controls.password.hasError('maxlength')) {
+            <p class="field-error" id="password-error" role="alert">
+              A jelszó legfeljebb 72 karakter lehet.
+            </p>
+          }
+        }
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            formControlName="phoneNumber"
+            autocomplete="tel"
+            maxlength="30"
+            placeholder=" "
+            aria-describedby="phone-help phone-error"
+          >
+          <label for="phoneNumber">Telefonszám</label>
+        </div>
+
+        <p class="field-hint" id="phone-help">
+          Nem kötelező megadni.
+        </p>
+
+        @if (
+          registrationForm.controls.phoneNumber.touched &&
+          registrationForm.controls.phoneNumber.hasError('maxlength')
+          ) {
+          <p class="field-error" id="phone-error" role="alert">
+            A telefonszám legfeljebb 30 karakter lehet.
+          </p>
+        }
+      </div>
+
+      <button type="submit" class="registration-button">
+        Regisztráció
+      </button>
+    </form>
+
+    <p class="login-link">
+      Már van fiókod?
+      <a routerLink="/login">Jelentkezz be!</a>
+    </p>
+  </div>
+</div>

@@ -3,12 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {map, Observable, switchMap, tap} from 'rxjs';
 import {API_ENDPOINTS} from '../config/api.config';
 import {LoginCommand} from '../models/login-command.model';
+import {CsrfService} from './csrf.service';
 
-interface CsrfTokenResponse {
-  token: string;
-  headerName: string;
-  parameterName: string;
-}
 
 interface CurrentUser {
   id: number;
@@ -21,6 +17,7 @@ interface CurrentUser {
 export class AuthService {
 
   private readonly http = inject(HttpClient);
+  private readonly csrfService = inject(CsrfService);
 
   private readonly currentUserState = signal<CurrentUser | null>(null);
   private readonly sessionCheckedState = signal(false);
@@ -40,10 +37,7 @@ export class AuthService {
   }
 
   login(command: LoginCommand): Observable<void> {
-    return this.http.get<CsrfTokenResponse>(
-      API_ENDPOINTS.csrf,
-      {withCredentials: true}
-    ).pipe(
+    return this.csrfService.getToken().pipe(
       switchMap(csrf =>
         this.http.post<void>(
           API_ENDPOINTS.login,
@@ -68,10 +62,7 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    return this.http.get<CsrfTokenResponse>(
-      API_ENDPOINTS.csrf,
-      {withCredentials: true}
-    ).pipe(
+    return this.csrfService.getToken().pipe(
       switchMap(csrf =>
         this.http.post<void>(
           API_ENDPOINTS.logout,

@@ -1,0 +1,257 @@
+:host {
+  display: block;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.registration-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #27c3c5 0%, #137f87 100%);
+  color: #fff;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+.registration-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+.registration-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.registration-header h1 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.registration-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input {
+  display: block;
+  width: 100%;
+  padding: 28px 16px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  caret-color: #fff;
+  font: inherit;
+  font-size: 16px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.input-wrapper input::placeholder {
+  color: transparent;
+}
+
+.input-wrapper label {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  color: #fff;
+  font-size: 16px;
+  pointer-events: none;
+  transition: top 0.2s ease, font-size 0.2s ease;
+}
+
+.input-wrapper input:focus {
+  border-color: #99f6e4;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(153, 246, 228, 0.2);
+}
+
+.input-wrapper input:focus + label,
+.input-wrapper input:not(:placeholder-shown) + label {
+  top: 6px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.input-wrapper input.ng-invalid.ng-touched {
+  border-color: #ffd0cb;
+}
+
+.input-wrapper input:autofill {
+  background: #328f94;
+  color: #fff;
+}
+
+.input-wrapper input:-webkit-autofill,
+.input-wrapper input:-webkit-autofill:hover,
+.input-wrapper input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px #328f94 inset;
+  box-shadow: 0 0 0 1000px #328f94 inset;
+}
+
+.input-wrapper input:autofill + label {
+  top: 6px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.password-wrapper input {
+  padding-right: 54px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.password-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.password-toggle svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.field-hint {
+  margin: 6px 4px 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+}
+
+.field-error {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 208, 203, 0.4);
+  border-radius: 8px;
+  background: rgba(100, 15, 15, 0.3);
+  color: #fff;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.registration-button {
+  display: block;
+  width: 100%;
+  padding: 15px 24px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0d9488 0%, #22d3c5 100%);
+  box-shadow: 0 4px 15px rgba(0, 100, 105, 0.3);
+  color: #fff;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.registration-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 100, 105, 0.4);
+}
+
+.registration-button:active {
+  transform: translateY(0);
+}
+
+.registration-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
+}
+
+.login-link {
+  margin: 24px 0 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+}
+
+.login-link a {
+  color: #99f6e4;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+@media (max-width: 480px) {
+  .registration-page {
+    padding: 24px 16px;
+  }
+
+  .registration-card {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .registration-header h1 {
+    font-size: 1.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
