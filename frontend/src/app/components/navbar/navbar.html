@@ -54,9 +54,35 @@
           </button>
         </div>
 
-        <a class="login-link" routerLink="/login">
-          {{ language() === 'hu' ? 'Bejelentkezés' : 'Sign in' }}
-        </a>
+        @if (authService.sessionChecked()) {
+          @if (authService.currentUser(); as user) {
+            <button
+              type="button"
+              class="profile-button"
+              [attr.aria-label]="language() === 'hu' ? 'Profilmenü' : 'Profile menu'"
+              [title]="user.fullName"
+            >
+              <svg
+                width="44"
+                height="44"
+                viewBox="0 0 48 48"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle cx="24" cy="24" r="23" fill="currentColor" opacity="0.12"/>
+                <circle cx="24" cy="18" r="7" fill="currentColor"/>
+                <path
+                  d="M11 38C11 30.8 16.8 27 24 27S37 30.8 37 38"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+          } @else {
+            <a class="login-link" routerLink="/login">
+              {{ language() === 'hu' ? 'Bejelentkezés' : 'Sign in' }}
+            </a>
+          }
+        }
       </div>
     </div>
   </nav>

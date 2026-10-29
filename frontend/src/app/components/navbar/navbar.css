@@ -1,6 +1,6 @@
 :host {
   display: block;
- 
+
 }
 
 .site-header {
@@ -193,4 +193,27 @@ button:focus-visible {
   .login-link {
     transition: none;
   }
+}
+
+.profile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--header-bg);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.profile-button:hover {
+  background: var(--surface-soft);
+}
+
+.profile-button svg {
+  display: block;
 }

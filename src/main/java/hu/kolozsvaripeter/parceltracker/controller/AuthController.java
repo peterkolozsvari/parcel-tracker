@@ -45,9 +45,7 @@ public class AuthController {
     public ResponseEntity<UserDetailsDto> getCurrentUser(
             Authentication authentication
     ) {
-        return ResponseEntity.ok(
-                authService.getCurrentUser(authentication.getName())
-        );
+        return ResponseEntity.ok(authService.getCurrentUser(authentication.getName()));
     }
 
     @GetMapping("/csrf")
