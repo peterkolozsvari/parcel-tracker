@@ -1,0 +1,230 @@
+<div class="profile-page">
+  <section class="profile-card" aria-labelledby="profile-title">
+    <header class="profile-header">
+      <div class="profile-avatar" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="18" r="7" fill="currentColor"/>
+          <path
+            d="M11 38C11 30.8 16.8 27 24 27S37 30.8 37 38"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+
+      <div>
+        <h1 id="profile-title">Profilom</h1>
+        <p>Itt módosíthatod az adataidat és a mentett feladási címedet.</p>
+      </div>
+    </header>
+
+    <form
+      [formGroup]="profileForm"
+      (ngSubmit)="onSubmit()"
+      [attr.aria-busy]="isSaving"
+      novalidate
+    >
+      <fieldset class="profile-fields" [disabled]="isSaving">
+        <legend class="visually-hidden">Profiladatok szerkesztése</legend>
+
+        <section class="form-section" aria-labelledby="personal-title">
+          <div class="section-heading">
+            <h2 id="personal-title">Személyes adatok</h2>
+            <p>A nevedet és a telefonszámodat itt szerkesztheted.</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field full-width">
+              <label for="fullName">Teljes név</label>
+              <input
+                id="fullName"
+                type="text"
+                formControlName="fullName"
+                autocomplete="name"
+                maxlength="100"
+                required
+                aria-describedby="fullName-error"
+              >
+
+              @if (
+                profileForm.controls.fullName.touched &&
+                profileForm.controls.fullName.invalid
+                ) {
+                <p class="field-error" id="fullName-error" role="alert">
+                  Adj meg egy érvényes nevet, legfeljebb 100 karakterrel!
+                </p>
+              }
+            </div>
+
+            <div class="form-field">
+              <label for="email">Email-cím</label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                readonly
+                aria-describedby="email-help"
+              >
+              <p class="field-hint" id="email-help">
+                Az email-címed ezen a felületen nem módosítható.
+              </p>
+            </div>
+
+            <div class="form-field">
+              <label for="phoneNumber">
+                Telefonszám
+                <span class="optional-label">opcionális</span>
+              </label>
+              <input
+                id="phoneNumber"
+                type="tel"
+                formControlName="phoneNumber"
+                autocomplete="tel"
+                maxlength="30"
+                placeholder="+36 30 123 4567"
+                aria-describedby="phone-error"
+              >
+
+              @if (
+                profileForm.controls.phoneNumber.touched &&
+                profileForm.controls.phoneNumber.invalid
+                ) {
+                <p class="field-error" id="phone-error" role="alert">
+                  Adj meg egy érvényes telefonszámot!
+                </p>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="form-section"
+          formGroupName="address"
+          aria-labelledby="address-title"
+        >
+          <div class="section-heading">
+            <h2 id="address-title">Mentett feladási cím</h2>
+            <p>
+              Csomagfeladáskor ezt a címet használjuk alapértelmezetten.
+              Az adott küldeménynél másik címet is megadhatsz.
+            </p>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="country">Ország</label>
+              <input
+                id="country"
+                type="text"
+                formControlName="country"
+                autocomplete="country-name"
+                placeholder="Magyarország"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="postalCode">Irányítószám</label>
+              <input
+                id="postalCode"
+                type="text"
+                formControlName="postalCode"
+                autocomplete="postal-code"
+                placeholder="1211"
+              >
+            </div>
+
+            <div class="form-field full-width">
+              <label for="city">Település</label>
+              <input
+                id="city"
+                type="text"
+                formControlName="city"
+                autocomplete="address-level2"
+                placeholder="Budapest"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="street">Közterület neve és jellege</label>
+              <input
+                id="street"
+                type="text"
+                formControlName="street"
+                placeholder="Példa utca"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="houseNumber">Házszám</label>
+              <input
+                id="houseNumber"
+                type="text"
+                formControlName="houseNumber"
+                placeholder="12/B"
+              >
+            </div>
+
+            <div class="form-field full-width">
+              <label for="door">
+                Emelet, ajtó
+                <span class="optional-label">opcionális</span>
+              </label>
+              <input
+                id="door"
+                type="text"
+                formControlName="door"
+                placeholder="2. emelet, 5. ajtó"
+              >
+            </div>
+          </div>
+
+          @if (
+            profileForm.controls.address.touched &&
+            profileForm.controls.address.invalid
+            ) {
+            <p class="field-error address-error" role="alert">
+              Ellenőrizd a címadatokat! A mentett címhez az ország,
+              irányítószám, település, közterület és házszám legyen kitöltve.
+            </p>
+          }
+
+          <div class="address-note">
+            A mentett cím módosítása nem változtatja meg a korábban
+            létrehozott küldemények címeit.
+          </div>
+        </section>
+      </fieldset>
+
+      @if (errorMessage) {
+        <p class="feedback feedback-error" role="alert">
+          {{ errorMessage }}
+        </p>
+      }
+
+      @if (successMessage) {
+        <p class="feedback feedback-success" role="status">
+          {{ successMessage }}
+        </p>
+      }
+
+      <div class="form-actions">
+        <a class="back-link" routerLink="/home">
+          Vissza a főoldalra
+        </a>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="isSaving"
+        >
+          @if (isSaving) {
+            <span class="spinner" aria-hidden="true"></span>
+            Mentés folyamatban…
+          } @else {
+            Módosítások mentése
+          }
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

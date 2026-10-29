@@ -43,6 +43,12 @@ export const routes: Routes = [
         .then(m => m.Registration)
   },
   {
+    path: 'my-profile',
+    loadComponent: () =>
+      import('./components/my-profile/my-profile')
+        .then(m => m.MyProfile)
+  },
+  {
     path: 'page-not-found',
     loadComponent: () =>
       import('./components/page-not-found/page-not-found')

@@ -93,11 +93,18 @@
                     {{ user.fullName }}
                   </div>
 
-                  <button type="button" class="profile-menu-item">
+                  <button
+                    type="button"
+                    class="profile-menu-item"
+                    routerLink="/my-profile"
+                    (click)="closeProfileMenu()"
+                  >
                     Profilom
                   </button>
 
-                  <button type="button" class="profile-menu-item">
+                  <button
+                    type="button"
+                    class="profile-menu-item">
                     Csomagjaim
                   </button>
 
