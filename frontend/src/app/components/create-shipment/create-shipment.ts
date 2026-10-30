@@ -4,6 +4,7 @@ import {ShipmentService} from '../../services/shipment.service';
 import { CreateShipment as CreateShipmentCommand } from '../../models/shipment.model';
 import {Router} from '@angular/router';
 import {form} from '@angular/forms/signals';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-create-shipment',
@@ -12,12 +13,14 @@ import {form} from '@angular/forms/signals';
   styleUrl: './create-shipment.css'
 })
 export class CreateShipment {
+  private userId: number | null = null;
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
   private readonly shipmentService = inject(ShipmentService);
 
   readonly addressSections = [
-    { name: 'pickupAddress', title: 'Felvételi cím' },
+     { name: 'pickupAddress', title: 'Felvételi cím' },
     { name: 'deliveryAddress', title: 'Kézbesítési cím' }
   ];
 
@@ -96,10 +99,17 @@ export class CreateShipment {
       return;
     }
 
+    const user = this.authService.currentUser();
+
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     const formValue = this.shipmentForm.getRawValue();
 
     const command: CreateShipmentCommand = {
-      senderId: 1,
+      senderId: user.id,
       receiverName: formValue.receiverName,
       pickupAddress: formValue.pickupAddress,
       deliveryAddress: formValue.deliveryAddress,

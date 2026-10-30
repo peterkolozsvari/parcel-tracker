@@ -169,7 +169,7 @@ public class ShipmentService {
     }
 
     private String generateTrackingNumber(){
-        String characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        String characters = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
         StringBuilder trackingNumber = new StringBuilder();
 
         for (int i = 0; i < 10; i++) {
