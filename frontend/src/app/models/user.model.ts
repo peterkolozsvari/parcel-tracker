@@ -1,3 +1,5 @@
+import {CreateAddress} from './address.model';
+
 export type Role = 'CUSTOMER' | 'COURIER' | 'ADMIN';
 
 export interface UserDetails {
@@ -7,6 +9,7 @@ export interface UserDetails {
   phoneNumber: string | null;
   role: Role;
   active: boolean;
+  address?: CreateAddress | null;
 }
 
 export interface CreateUserCommand {
