@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {UserService} from '../../services/user.service';
@@ -16,8 +16,8 @@ export class MyProfile implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
   private userId: number | null = null;
-  protected errorMessage = '';
-  protected successMessage = '';
+  protected readonly successMessage = signal('');
+  protected readonly errorMessage = signal('');
   protected isSaving = false;
 
   ngOnInit(): void {
@@ -39,7 +39,7 @@ export class MyProfile implements OnInit {
         });
       },
       error: () => {
-        this.errorMessage = 'A profiladatokat nem sikerült betölteni.';
+        this.errorMessage.set('A profiladatokat nem sikerült betölteni.');
       }
     });
   }
@@ -60,14 +60,12 @@ export class MyProfile implements OnInit {
 
   protected onSubmit() {
     this.profileForm.markAllAsTouched();
-    this.successMessage = '';
-    this.errorMessage = '';
 
     if (this.profileForm.invalid) {
       return;
     }
     if (this.userId === null) {
-      this.errorMessage = 'A profiladatok még nem töltődtek be.';
+      this.errorMessage.set('A profiladatok még nem töltődtek be.');
       return;
     }
 
@@ -85,12 +83,15 @@ export class MyProfile implements OnInit {
         door: formValue.address.door
       }
     };
-    this.userService.updateUser(this.userId ,command).subscribe({
+    this.userService.updateUser(this.userId, command).subscribe({
       next: () => {
-        this.successMessage = 'A módosításokat sikeresen mentettük.';
+        this.successMessage.set('A módosításokat sikeresen mentettük.');
       },
       error: () => {
-        this.errorMessage = 'A regisztráció most nem sikerült. Próbáld újra később.';
+        this.errorMessage.set('A regisztráció most nem sikerült. Próbáld újra később.');
+      },
+      complete: () => {
+        this.isSaving = false;
       }
     });
   }

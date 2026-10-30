@@ -29,7 +29,6 @@
         <section class="form-section" aria-labelledby="personal-title">
           <div class="section-heading">
             <h2 id="personal-title">Személyes adatok</h2>
-            <p>A nevedet és a telefonszámodat itt szerkesztheted.</p>
           </div>
 
           <div class="form-grid">
@@ -184,15 +183,15 @@
         </section>
       </fieldset>
 
-      @if (errorMessage) {
+      @if (errorMessage()) {
         <p class="feedback feedback-error" role="alert">
-          {{ errorMessage }}
+          {{ errorMessage() }}
         </p>
       }
 
-      @if (successMessage) {
+      @if (successMessage()) {
         <p class="feedback feedback-success" role="status">
-          {{ successMessage }}
+          {{ successMessage() }}
         </p>
       }
 
