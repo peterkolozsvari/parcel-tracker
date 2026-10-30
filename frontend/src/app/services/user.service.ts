@@ -42,4 +42,10 @@ export class UserService {
     return this.http.patch<void>(`${BASE_URL}/${userId}`, command);
   }
 
+  getCurrentUser(): Observable<UserDetails> {
+    return this.http.get<UserDetails>(
+      API_ENDPOINTS.currentUser,
+      {withCredentials: true}
+    );
+  }
 }

@@ -1,7 +1,9 @@
 package hu.kolozsvaripeter.parceltracker.service;
 
+import hu.kolozsvaripeter.parceltracker.domain.Address;
 import hu.kolozsvaripeter.parceltracker.domain.User;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.LoginDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.AddressDetailsDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,13 +43,27 @@ public class AuthService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
 
+        Address address = user.getAddress();
+
+        AddressDetailsDto addressDto = address == null
+                ? null
+                : new AddressDetailsDto(
+                address.getCountry(),
+                address.getPostalCode(),
+                address.getCity(),
+                address.getStreet(),
+                address.getHouseNumber(),
+                address.getDoor()
+        );
+
         return new UserDetailsDto(
                 user.getId(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhoneNumber(),
                 user.getRole(),
-                user.isActive()
+                user.isActive(),
+                addressDto
         );
     }
 }

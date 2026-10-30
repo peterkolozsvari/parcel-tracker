@@ -22,4 +22,5 @@ export interface CreateUserCommand {
 export interface UpdateUserProfile {
   fullName?: string | null;
   phoneNumber?: string | null;
+  address?: CreateAddress | null;
 }
