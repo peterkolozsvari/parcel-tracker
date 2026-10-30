@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {RouterLink} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {UpdateUserProfile} from '../../models/user.model';
 
@@ -15,7 +15,6 @@ export class MyProfile implements OnInit {
 
   private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
-  private readonly router = inject(Router);
   private userId: number | null = null;
   protected errorMessage = '';
   protected successMessage = '';
@@ -61,6 +60,7 @@ export class MyProfile implements OnInit {
 
   protected onSubmit() {
     this.profileForm.markAllAsTouched();
+    this.successMessage = '';
     this.errorMessage = '';
 
     if (this.profileForm.invalid) {
@@ -87,7 +87,7 @@ export class MyProfile implements OnInit {
     };
     this.userService.updateUser(this.userId ,command).subscribe({
       next: () => {
-        this.router.navigate(['/my-profile', 'success']);
+        this.successMessage = 'A módosításokat sikeresen mentettük.';
       },
       error: () => {
         this.errorMessage = 'A regisztráció most nem sikerült. Próbáld újra később.';

@@ -38,8 +38,24 @@ export class UserService {
     return this.http.get<UserDetails>(`${BASE_URL}/${userId}`);
   }
 
-  updateUser(userId: number, command: UpdateUserProfile) {
-    return this.http.patch<void>(`${BASE_URL}/${userId}`, command);
+  updateUser(
+    userId: number,
+    command: UpdateUserProfile
+  ): Observable<void> {
+    return this.csrfService.getToken().pipe(
+      switchMap(csrf =>
+        this.http.patch<void>(
+          `${BASE_URL}/${userId}`,
+          command,
+          {
+            withCredentials: true,
+            headers: {
+              [csrf.headerName]: csrf.token
+            }
+          }
+        )
+      )
+    );
   }
 
   getCurrentUser(): Observable<UserDetails> {
