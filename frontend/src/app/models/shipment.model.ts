@@ -1,5 +1,6 @@
 import { CreateAddress } from './address.model';
-import { CreateParcel } from './parcel.model';
+import { CreateParcel, ParcelDetails } from './parcel.model';
+import { UserDetails } from './user.model';
 
 export interface CreateShipment {
   senderId: number;
@@ -30,4 +31,28 @@ export interface ShipmentListItem {
   status: ShipmentStatus;
   createdAt: string;
 }
+
+export interface ShipmentDetails {
+  id: number;
+  trackingNumber: string;
+  status: ShipmentStatus;
+  sender: UserDetails;
+  courier: UserDetails | null;
+  receiverName: string;
+  pickupAddress: CreateAddress;
+  deliveryAddress: CreateAddress;
+  parcels: ParcelDetails[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const SHIPMENT_STATUS_LABELS: Record<ShipmentStatus, string> = {
+  REGISTERED: 'Rögzítve',
+  COURIER_ASSIGNED: 'Futár hozzárendelve',
+  PICKED_UP: 'Felvéve',
+  IN_TRANSIT: 'Szállítás alatt',
+  DELIVERED: 'Kézbesítve',
+  DELIVERY_FAILED: 'Sikertelen kézbesítés',
+  CANCELLED: 'Törölve'
+};
 
