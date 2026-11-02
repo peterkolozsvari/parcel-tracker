@@ -62,7 +62,7 @@ class ShipmentWorkflowIT {
     }
 
     @Test void migrationsAndRegistrationLoginLogout() throws Exception {
-        assertEquals(5, jdbc.queryForObject("SELECT count(*) FROM flyway_schema_history WHERE success", Integer.class));
+        assertEquals(5, jdbc.queryForObject("SELECT count(*) FROM flyway_schema_history WHERE success AND version IS NOT NULL", Integer.class));
         Client client = new Client();
         var command = Map.of("fullName", "Registered User", "email", "register@example.test", "password", PASSWORD);
         client.mutate("POST", "/api/users", command, 201);
