@@ -16,6 +16,14 @@ describe('ShipmentService own shipments', () => {
   });
   afterEach(() => http.verify());
 
+  it('loads shipment details with the session cookie', () => {
+    service.getShipmentById(25).subscribe();
+    const request = http.expectOne(`${API_ENDPOINTS.shipments}/25`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.withCredentials).toBe(true);
+    request.flush({id: 25});
+  });
+
   it('sends the session cookie and omits sender and status when unfiltered', () => {
     service.getMyShipments().subscribe();
     const request = http.expectOne(req => req.url === `${API_ENDPOINTS.shipments}/my`);
