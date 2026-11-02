@@ -50,6 +50,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/shipments/*/courier").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/shipments/*/status").hasAnyRole("ADMIN", "COURIER")
                         .requestMatchers(HttpMethod.GET, "/api/shipments").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
