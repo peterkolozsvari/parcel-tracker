@@ -24,6 +24,30 @@
       </dl>
     </section>
 
+    <section class="detail-card history-section" aria-labelledby="history-heading" [attr.aria-busy]="historyLoading()">
+      <h2 id="history-heading">Státusztörténet</h2>
+      @if (historyLoading()) {
+        <p role="status">Státusztörténet betöltése…</p>
+      } @else if (historyError()) {
+        <p class="history-error" role="alert">{{ historyError() }}</p>
+        <button type="button" class="btn btn-outline-secondary" (click)="loadTrackingEvents()">Újrapróbálás</button>
+      } @else {
+        <ol class="timeline">
+          @for (event of trackingEvents(); track event.id) {
+            <li>
+              <h3>{{ statusLabels[event.status] }}</h3>
+              <time [attr.datetime]="event.occurredAt">{{ event.occurredAt | date:'yyyy.MM.dd. HH:mm' }}</time>
+              @if (eventDescription(event); as description) {
+                <p>{{ description }}</p>
+              }
+            </li>
+          } @empty {
+            <li class="empty-history">Még nincs rögzített esemény ehhez a küldeményhez.</li>
+          }
+        </ol>
+      }
+    </section>
+
     <div class="details-grid">
       <section class="detail-card">
         <h2>Feladó és felvételi cím</h2>
