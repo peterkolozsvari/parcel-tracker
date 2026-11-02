@@ -4,6 +4,12 @@ import {authGuard} from './guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'admin/users',
+    canActivate: [roleGuard],
+    data: {role: 'ADMIN'},
+    loadComponent: () => import('./components/user-management/user-management').then(m => m.UserManagement)
+  },
+  {
     path: 'admin/shipments',
     canActivate: [roleGuard],
     data: {role: 'ADMIN'},
