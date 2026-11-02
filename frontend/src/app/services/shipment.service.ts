@@ -1,7 +1,8 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, switchMap} from 'rxjs';
-import {CreateShipment, CreateShipmentResponse} from '../models/shipment.model';
+import {CreateShipment, CreateShipmentResponse, ShipmentListItem, ShipmentStatus} from '../models/shipment.model';
+import {PageResponse} from '../models/page-response.model';
 import {API_ENDPOINTS} from '../config/api.config';
 import {CsrfService} from './csrf.service';
 
@@ -14,6 +15,18 @@ export class ShipmentService {
 
   private readonly http = inject(HttpClient);
   private readonly csrfService = inject(CsrfService);
+
+  getMyShipments(page = 0, status: ShipmentStatus | '' = ''): Observable<PageResponse<ShipmentListItem>> {
+    let params = new HttpParams().set('page', page).set('size', 10);
+    if (status) {
+      params = params.set('status', status);
+    }
+
+    return this.http.get<PageResponse<ShipmentListItem>>(`${BASE_URL}/my`, {
+      params,
+      withCredentials: true
+    });
+  }
 
   createShipment(
     command: CreateShipment
@@ -34,3 +47,4 @@ export class ShipmentService {
     );
   }
 }
+
