@@ -1,0 +1,32 @@
+:host { display: block; }
+h1 { margin: 1rem 0 1.75rem; }
+h2 { margin: 0 0 1.25rem; font-size: 1.2rem; }
+h3 { margin-bottom: 1rem; font-size: 1.05rem; }
+.back-link { color: var(--accent); font-weight: 600; text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
+.summary-panel, .detail-card, .state-panel { border: 1px solid var(--border); border-radius: 12px; background: var(--header-bg); padding: 1.5rem; }
+.summary-panel { display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-bottom: 1.5rem; background: var(--surface-soft); }
+.field-label, dt { color: var(--text-muted); font-size: .9rem; font-weight: 400; }
+.tracking-number { margin: .35rem 0 .75rem; color: var(--accent); font-size: 1.75rem; font-weight: 750; overflow-wrap: anywhere; }
+.status-badge { display: inline-block; padding: .4rem .75rem; border-radius: 999px; background: var(--header-bg); color: var(--accent); font-size: .85rem; font-weight: 600; }
+.status-badge[data-status="DELIVERED"] { background: #e8f5ec; color: #23653a; }
+.status-badge[data-status="DELIVERY_FAILED"], .status-badge[data-status="CANCELLED"] { background: #fff0ee; color: #a12b20; }
+dl { margin: 0; }
+dd { margin: .25rem 0 0; overflow-wrap: anywhere; }
+.summary-dates { display: grid; gap: 1rem; }
+.details-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+.person-name { font-weight: 700; overflow-wrap: anywhere; }
+address { margin: 0; line-height: 1.8; overflow-wrap: anywhere; }
+.parcel-count { color: var(--text-muted); font-size: .95rem; font-weight: 400; }
+.parcel-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.parcel-card { padding: 1.25rem; border: 1px solid var(--border); border-radius: 8px; }
+.parcel-card dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.description { grid-column: 1 / -1; }
+.description dd { white-space: pre-wrap; }
+.state-panel { text-align: center; color: var(--text-muted); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 767px) {
+  .summary-panel { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+  .details-grid, .parcel-list { grid-template-columns: minmax(0, 1fr); }
+  .summary-panel, .detail-card, .state-panel { padding: 1.25rem; }
+}
