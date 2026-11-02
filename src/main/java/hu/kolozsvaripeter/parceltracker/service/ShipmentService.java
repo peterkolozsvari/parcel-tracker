@@ -75,6 +75,19 @@ public class ShipmentService {
         return toShipmentDetailsDto(shipment);
     }
 
+    @Transactional(readOnly = true)
+    public List<TrackingEventDto> getTrackingEvents(Long shipmentId, String email) {
+        Shipment shipment = shipmentRepository.findById(shipmentId)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with id: " + shipmentId));
+        checkShipmentAccess(shipment, email);
+
+        return trackingEventRepository.findAllByShipmentIdOrderByOccurredAtAscIdAsc(shipmentId)
+                .stream()
+                .map(event -> new TrackingEventDto(
+                        event.getId(), event.getStatus(), event.getDescription(), event.getOccurredAt()))
+                .toList();
+    }
+
     private void checkShipmentAccess(Shipment shipment, String email) {
         User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
