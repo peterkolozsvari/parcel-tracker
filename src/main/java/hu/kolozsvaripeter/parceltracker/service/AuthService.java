@@ -7,6 +7,7 @@ import hu.kolozsvaripeter.parceltracker.dto.outgoing.AddressDetailsDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,6 +44,10 @@ public class AuthService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
 
+        if (!user.isActive()) {
+            throw new DisabledException("User account is disabled");
+        }
+
         Address address = user.getAddress();
 
         AddressDetailsDto addressDto = address == null
@@ -67,3 +72,4 @@ public class AuthService {
         );
     }
 }
+
