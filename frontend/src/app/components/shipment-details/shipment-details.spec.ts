@@ -5,6 +5,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {ShipmentDetails} from './shipment-details';
 import {ShipmentDetails as ShipmentDetailsModel} from '../../models/shipment.model';
 import {ShipmentService} from '../../services/shipment.service';
+import {TrackingEvent} from '../../models/tracking-event.model';
 
 describe('ShipmentDetails', () => {
   const address = {country: 'Magyarország', postalCode: '1211', city: 'Budapest',
@@ -18,9 +19,13 @@ describe('ShipmentDetails', () => {
     createdAt: '2026-11-02T10:00:00Z', updatedAt: '2026-11-02T10:00:00Z'
   };
 
-  async function setup(response: Observable<ShipmentDetailsModel> = of(details), id = '1') {
+  async function setup(response: Observable<ShipmentDetailsModel> = of(details), id = '1',
+                       history: Observable<TrackingEvent[]> = of([])) {
     const params = new BehaviorSubject(convertToParamMap({id}));
-    const service = {getShipmentById: vi.fn((_id: number) => response)};
+    const service = {
+      getShipmentById: vi.fn((_id: number) => response),
+      getTrackingEvents: vi.fn((_id: number) => history)
+    };
     await TestBed.configureTestingModule({
       imports: [ShipmentDetails],
       providers: [provideRouter([]), {provide: ActivatedRoute, useValue: {paramMap: params}},
@@ -81,5 +86,61 @@ describe('ShipmentDetails', () => {
     params.next(convertToParamMap({id: '2'}));
     previous.next(details);
     expect(component.shipment()?.trackingNumber).toBe('SECOND1234');
+  });
+
+  const registered: TrackingEvent = {
+    id: 10, status: 'REGISTERED', description: 'Shipment registered', occurredAt: '2026-11-02T10:00:00Z'
+  };
+
+  it('shows the initial event with a Hungarian description', async () => {
+    const {fixture, service} = await setup(of(details), '1', of([registered]));
+    expect(service.getTrackingEvents).toHaveBeenCalledWith(1);
+    const timeline = fixture.nativeElement.querySelector('.timeline');
+    expect(timeline.querySelectorAll('li').length).toBe(1);
+    expect(timeline.textContent).toContain('Küldemény rögzítve.');
+    expect(timeline.querySelector('time').getAttribute('datetime')).toBe(registered.occurredAt);
+  });
+
+  it('preserves the backend event order, including equal timestamps', async () => {
+    const second: TrackingEvent = {...registered, id: 11, status: 'COURIER_ASSIGNED', description: null};
+    const {fixture} = await setup(of(details), '1', of([registered, second]));
+    const labels = [...fixture.nativeElement.querySelectorAll('.timeline h3')]
+      .map((node: unknown) => (node as HTMLElement).textContent);
+    expect(labels).toEqual(['Rögzítve', 'Futár hozzárendelve']);
+  });
+
+  it('shows an empty timeline for a legacy shipment without events', async () => {
+    const {fixture} = await setup();
+    expect(fixture.nativeElement.querySelector('.timeline').textContent)
+      .toContain('Még nincs rögzített esemény');
+  });
+
+  it('keeps shipment details visible when history fails and retries only history', async () => {
+    const {fixture, component, service} = await setup(of(details), '1', throwError(() => ({status: 500})));
+    expect(fixture.nativeElement.querySelector('.summary-panel').textContent).toContain('TEST123456');
+    expect(fixture.nativeElement.querySelector('.history-error')).not.toBeNull();
+    service.getTrackingEvents.mockReturnValue(of([registered]));
+    fixture.nativeElement.querySelector('.history-section button').click();
+    expect(component.trackingEvents()).toEqual([registered]);
+    expect(component.historyError()).toBe('');
+    expect(service.getShipmentById).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows history loading and cancels history when the route changes', async () => {
+    const previous = new Subject<TrackingEvent[]>();
+    const {fixture, component, service, params} = await setup(of(details), '1', previous);
+    expect(fixture.nativeElement.querySelector('.history-section').textContent)
+      .toContain('Státusztörténet betöltése');
+    service.getShipmentById.mockReturnValue(of({...details, id: 2}));
+    service.getTrackingEvents.mockReturnValue(of([]));
+    params.next(convertToParamMap({id: '2'}));
+    previous.next([registered]);
+    expect(component.trackingEvents()).toEqual([]);
+    expect(service.getTrackingEvents).toHaveBeenLastCalledWith(2);
+  });
+
+  it('redirects to login if the session expires while loading history', async () => {
+    const {navigate} = await setup(of(details), '1', throwError(() => ({status: 401})));
+    expect(navigate).toHaveBeenCalledWith(['/login']);
   });
 });
