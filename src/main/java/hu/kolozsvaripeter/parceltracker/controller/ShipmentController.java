@@ -77,6 +77,15 @@ public class ShipmentController {
         return shipmentService.getTrackingEvents(id, principal.getName());
     }
 
+    @GetMapping("/assigned")
+    public Page<ShipmentListItemDto> getAssignedShipments(
+            Principal principal,
+            @RequestParam(required = false) ShipmentStatus status,
+            @PageableDefault(size = 10, sort = {"createdAt", "id"}, direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return shipmentService.getAssignedShipments(principal.getName(), status, pageable);
+    }
+
     @GetMapping("/my")
     public Page<ShipmentListItemDto> getMyShipments(
             Principal principal,
