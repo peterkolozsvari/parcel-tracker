@@ -24,6 +24,16 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
 
     @Query("""
         SELECT s FROM Shipment s
+        WHERE s.courier.id = :courierId
+          AND (:status IS NULL OR s.status = :status)
+        """)
+    Page<Shipment> findAssignedToCourier(
+            @Param("courierId") Long courierId,
+            @Param("status") ShipmentStatus status,
+            Pageable pageable);
+
+    @Query("""
+        SELECT s FROM Shipment s
         WHERE (:status IS NULL OR s.status = :status)
           AND (:senderId IS NULL OR s.sender.id = :senderId)
         """)

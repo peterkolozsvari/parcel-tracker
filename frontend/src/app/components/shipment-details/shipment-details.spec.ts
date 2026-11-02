@@ -6,6 +6,9 @@ import {ShipmentDetails} from './shipment-details';
 import {ShipmentDetails as ShipmentDetailsModel} from '../../models/shipment.model';
 import {ShipmentService} from '../../services/shipment.service';
 import {TrackingEvent} from '../../models/tracking-event.model';
+import {signal} from '@angular/core';
+import {AuthService} from '../../services/auth.service';
+import {UserService} from '../../services/user.service';
 
 describe('ShipmentDetails', () => {
   const address = {country: 'Magyarország', postalCode: '1211', city: 'Budapest',
@@ -29,6 +32,8 @@ describe('ShipmentDetails', () => {
     await TestBed.configureTestingModule({
       imports: [ShipmentDetails],
       providers: [provideRouter([]), {provide: ActivatedRoute, useValue: {paramMap: params}},
+        {provide: AuthService, useValue: {currentUser: signal({id: 11, role: 'CUSTOMER'}), sessionChecked: signal(true)}},
+        {provide: UserService, useValue: {getActiveCouriers: () => of([])}},
         {provide: ShipmentService, useValue: service}]
     }).compileComponents();
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);

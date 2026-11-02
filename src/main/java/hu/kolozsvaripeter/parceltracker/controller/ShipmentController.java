@@ -2,6 +2,7 @@ package hu.kolozsvaripeter.parceltracker.controller;
 
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.AssignCourierDto;
+import hu.kolozsvaripeter.parceltracker.dto.incoming.UpdateShipmentStatusDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentDetailsDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentListItemDto;
@@ -49,6 +50,14 @@ public class ShipmentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateShipmentStatus(@PathVariable Long id,
+                                                    @RequestBody @Valid UpdateShipmentStatusDto command,
+                                                    Principal principal) {
+        shipmentService.updateShipmentStatus(id, command, principal.getName());
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ShipmentDetailsDto> getShipmentById(@PathVariable Long id, Principal principal) {
         log.info("Shipment is requested: {}", id);
@@ -66,6 +75,15 @@ public class ShipmentController {
     @GetMapping("/{id}/tracking-events")
     public List<TrackingEventDto> getTrackingEvents(@PathVariable Long id, Principal principal) {
         return shipmentService.getTrackingEvents(id, principal.getName());
+    }
+
+    @GetMapping("/assigned")
+    public Page<ShipmentListItemDto> getAssignedShipments(
+            Principal principal,
+            @RequestParam(required = false) ShipmentStatus status,
+            @PageableDefault(size = 10, sort = {"createdAt", "id"}, direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return shipmentService.getAssignedShipments(principal.getName(), status, pageable);
     }
 
     @GetMapping("/my")

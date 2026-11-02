@@ -17,6 +17,35 @@ export class ShipmentService {
   private readonly http = inject(HttpClient);
   private readonly csrfService = inject(CsrfService);
 
+  getAllShipments(page = 0, status: ShipmentStatus | '' = ''): Observable<PageResponse<ShipmentListItem>> {
+    return this.getShipmentPage(BASE_URL, page, status);
+  }
+
+  getAssignedShipments(page = 0, status: ShipmentStatus | '' = ''): Observable<PageResponse<ShipmentListItem>> {
+    return this.getShipmentPage(`${BASE_URL}/assigned`, page, status);
+  }
+
+  private getShipmentPage(url: string, page: number, status: ShipmentStatus | ''): Observable<PageResponse<ShipmentListItem>> {
+    let params = new HttpParams().set('page', page).set('size', 10);
+    if (status) params = params.set('status', status);
+    return this.http.get<PageResponse<ShipmentListItem>>(url, {params, withCredentials: true});
+  }
+
+  assignCourier(shipmentId: number, courierId: number): Observable<void> {
+    return this.patchShipment(`${BASE_URL}/${shipmentId}/courier`, {courierId});
+  }
+
+  updateStatus(shipmentId: number, status: ShipmentStatus, description = ''): Observable<void> {
+    return this.patchShipment(`${BASE_URL}/${shipmentId}/status`, {status, description});
+  }
+
+  private patchShipment(url: string, command: object): Observable<void> {
+    return this.csrfService.getToken().pipe(switchMap(csrf => this.http.patch<void>(url, command, {
+      withCredentials: true,
+      headers: {[csrf.headerName]: csrf.token}
+    })));
+  }
+
   getTrackingEvents(shipmentId: number): Observable<TrackingEvent[]> {
     return this.http.get<TrackingEvent[]>(`${BASE_URL}/${shipmentId}/tracking-events`, {
       withCredentials: true

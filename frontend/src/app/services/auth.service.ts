@@ -4,11 +4,13 @@ import {map, Observable, switchMap, tap} from 'rxjs';
 import {API_ENDPOINTS} from '../config/api.config';
 import {LoginCommand} from '../models/login-command.model';
 import {CsrfService} from './csrf.service';
+import {Role} from '../models/user.model';
 
 
 interface CurrentUser {
   id: number;
   fullName: string;
+  role: Role;
 }
 
 @Injectable({
@@ -82,3 +84,4 @@ export class AuthService {
     );
   }
 }
+
