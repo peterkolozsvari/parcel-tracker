@@ -4,6 +4,7 @@ import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentDetailsDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentListItemDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.TrackingEventDto;
 import hu.kolozsvaripeter.parceltracker.enums.ShipmentStatus;
 import hu.kolozsvaripeter.parceltracker.service.ShipmentService;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/shipments")
@@ -50,6 +52,11 @@ public class ShipmentController {
         log.info("Shipment is requested: {}", trackingNumber);
         ShipmentDetailsDto shipment = shipmentService.getShipmentByTrackingNumber(trackingNumber, principal.getName());
         return new ResponseEntity<>(shipment, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/tracking-events")
+    public List<TrackingEventDto> getTrackingEvents(@PathVariable Long id, Principal principal) {
+        return shipmentService.getTrackingEvents(id, principal.getName());
     }
 
     @GetMapping("/my")
