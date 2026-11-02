@@ -17,6 +17,13 @@ describe('ShipmentService own shipments', () => {
   });
   afterEach(() => http.verify());
 
+  it('includes the session cookie when loading a user profile by ID', () => {
+    TestBed.inject(UserService).getUserById(1).subscribe();
+    const request = http.expectOne(`${API_ENDPOINTS.users}/1`);
+    expect(request.request.withCredentials).toBe(true);
+    request.flush({id: 1});
+  });
+
   it('loads the active courier directory with the session cookie', () => {
     TestBed.inject(UserService).getActiveCouriers().subscribe();
     const request = http.expectOne(`${API_ENDPOINTS.users}/couriers`);
