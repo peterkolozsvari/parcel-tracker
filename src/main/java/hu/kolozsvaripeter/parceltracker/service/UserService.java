@@ -63,9 +63,9 @@ public class UserService {
                 .stream().map(user -> new CourierListItemDto(user.getId(), user.getFullName())).toList();
     }
 
-    public UserDetailsDto getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    @Transactional(readOnly = true)
+    public UserDetailsDto getUserById(Long id, String email) {
+        User user = findAccessibleUser(id, email);
 
         return new UserDetailsDto(
                 user.getId(),
@@ -77,9 +77,8 @@ public class UserService {
         );
     }
 
-    public void updateUser(Long id, UpdateUserProfileDto command) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    public void updateUser(Long id, UpdateUserProfileDto command, String email) {
+        User user = findAccessibleUser(id, email);
 
         Address address = user.getAddress();
 
@@ -105,6 +104,16 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    private User findAccessibleUser(Long id, String email) {
+        User actor = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        if (!actor.isActive() || (actor.getRole() != Role.ADMIN && !actor.getId().equals(id))) {
+            throw new AccessDeniedException("Access denied");
+        }
+        return actor.getId().equals(id) ? actor : userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 }
 
