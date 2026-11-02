@@ -7,6 +7,7 @@ import hu.kolozsvaripeter.parceltracker.dto.incoming.UpdateUserProfileDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.enums.Role;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
+import hu.kolozsvaripeter.parceltracker.repository.AddressRepository;
 import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AddressRepository addressRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       AddressRepository addressRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.addressRepository = addressRepository;
     }
 
 
@@ -83,7 +87,7 @@ public class UserService {
             address.setStreet(command.address().street());
             address.setHouseNumber(command.address().houseNumber());
             address.setDoor(command.address().door());
-            user.setAddress(address);
+            user.setAddress(addressRepository.save(address));
         }
 
         userRepository.save(user);
