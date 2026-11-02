@@ -39,16 +39,16 @@ public class ShipmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ShipmentDetailsDto> getShipmentById(@PathVariable Long id) {
+    public ResponseEntity<ShipmentDetailsDto> getShipmentById(@PathVariable Long id, Principal principal) {
         log.info("Shipment is requested: {}", id);
-        ShipmentDetailsDto shipment = shipmentService.getShipmentById(id);
+        ShipmentDetailsDto shipment = shipmentService.getShipmentById(id, principal.getName());
         return new ResponseEntity<>(shipment, HttpStatus.OK);
     }
 
     @GetMapping("/tracking/{trackingNumber}")
-    public ResponseEntity<ShipmentDetailsDto> getShipmentByTrackingNumber(@PathVariable String trackingNumber) {
+    public ResponseEntity<ShipmentDetailsDto> getShipmentByTrackingNumber(@PathVariable String trackingNumber, Principal principal) {
         log.info("Shipment is requested: {}", trackingNumber);
-        ShipmentDetailsDto shipment = shipmentService.getShipmentByTrackingNumber(trackingNumber);
+        ShipmentDetailsDto shipment = shipmentService.getShipmentByTrackingNumber(trackingNumber, principal.getName());
         return new ResponseEntity<>(shipment, HttpStatus.OK);
     }
 
