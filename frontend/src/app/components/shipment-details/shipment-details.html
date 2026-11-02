@@ -19,6 +19,9 @@
         <span class="status-badge" [attr.data-status]="item.status">{{ statusLabels[item.status] }}</span>
       </div>
       <dl class="summary-dates">
+        @if (item.courier; as courier) {
+          <div><dt>Hozzárendelt futár</dt><dd>{{ courier.fullName }}</dd></div>
+        }
         <div><dt>Feladás ideje</dt><dd>{{ item.createdAt | date:'yyyy.MM.dd. HH:mm' }}</dd></div>
         <div><dt>Utolsó módosítás</dt><dd>{{ item.updatedAt | date:'yyyy.MM.dd. HH:mm' }}</dd></div>
       </dl>
