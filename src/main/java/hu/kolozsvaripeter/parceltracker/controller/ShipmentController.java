@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/shipments")
 public class ShipmentController {
@@ -48,6 +50,19 @@ public class ShipmentController {
         log.info("Shipment is requested: {}", trackingNumber);
         ShipmentDetailsDto shipment = shipmentService.getShipmentByTrackingNumber(trackingNumber);
         return new ResponseEntity<>(shipment, HttpStatus.OK);
+    }
+
+    @GetMapping("/my")
+    public Page<ShipmentListItemDto> getMyShipments(
+            Principal principal,
+            @RequestParam(required = false) ShipmentStatus status,
+            @PageableDefault(
+                    size = 10,
+                    sort = {"createdAt", "id"},
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable
+    ) {
+        return shipmentService.getMyShipments(principal.getName(), status, pageable);
     }
 
     @GetMapping
