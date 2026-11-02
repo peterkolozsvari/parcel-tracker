@@ -3,6 +3,7 @@ package hu.kolozsvaripeter.parceltracker.controller;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.UpdateUserProfileDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.CourierListItemDto;
 import hu.kolozsvaripeter.parceltracker.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.security.Principal;
+import java.util.List;
 
 
 @RestController
@@ -30,6 +33,11 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/couriers")
+    public List<CourierListItemDto> getActiveCouriers(Principal principal) {
+        return userService.getActiveCouriers(principal.getName());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailsDto> getUserById(@PathVariable Long id) {
         log.info("User is requested: {}", id);
@@ -45,3 +53,4 @@ public class UserController {
     }
 
 }
+
