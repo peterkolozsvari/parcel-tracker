@@ -39,16 +39,17 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetailsDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDetailsDto> getUserById(@PathVariable Long id, Principal principal) {
         log.info("User is requested: {}", id);
-        UserDetailsDto user = userService.getUserById(id);
+        UserDetailsDto user = userService.getUserById(id, principal.getName());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody @Valid  UpdateUserProfileDto command) {
+    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody @Valid UpdateUserProfileDto command,
+                                           Principal principal) {
         log.info("update User: {}", id);
-        userService.updateUser(id, command);
+        userService.updateUser(id, command, principal.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

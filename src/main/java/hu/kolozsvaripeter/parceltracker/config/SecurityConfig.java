@@ -1,5 +1,6 @@
 package hu.kolozsvaripeter.parceltracker.config;
 
+import hu.kolozsvaripeter.parceltracker.exception.SecurityErrorWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -54,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/shipments").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users/couriers").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/shipments/assigned").hasRole("COURIER")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
@@ -62,22 +64,10 @@ public class SecurityConfig {
                 .requestCache(cache -> cache.disable())
 
                 .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint((request, response, exception) -> {
-                            response.setStatus(401);
-                            response.setContentType("application/json");
-                            response.getWriter().write(
-                                    "{\"error\":\"UNAUTHORIZED\","
-                                            + "\"message\":\"Authentication required\"}"
-                            );
-                        })
-                        .accessDeniedHandler((request, response, exception) -> {
-                            response.setStatus(403);
-                            response.setContentType("application/json");
-                            response.getWriter().write(
-                                    "{\"error\":\"FORBIDDEN\","
-                                            + "\"message\":\"Access denied\"}"
-                            );
-                        })
+                        .authenticationEntryPoint((request, response, exception) ->
+                                SecurityErrorWriter.write(response, 401, "UNAUTHORIZED", "Authentication required"))
+                        .accessDeniedHandler((request, response, exception) ->
+                                SecurityErrorWriter.write(response, 403, "FORBIDDEN", "Access denied"))
                 )
 
                 .logout(logout -> logout

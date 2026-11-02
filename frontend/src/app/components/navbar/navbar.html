@@ -111,6 +111,8 @@
                   </button>
 
                   @if (user.role === 'ADMIN') {
+                    <button type="button" class="profile-menu-item" routerLink="/admin/users"
+                            (click)="closeProfileMenu(); menuOpen.set(false)">Felhasználókezelés</button>
                     <button type="button" class="profile-menu-item" routerLink="/admin/shipments"
                             (click)="closeProfileMenu(); menuOpen.set(false)">Küldeménykezelés</button>
                   }

@@ -22,7 +22,7 @@ class ShipmentDetailsControllerTest {
     void setUp() {
         service = mock(ShipmentService.class);
         mvc = MockMvcBuilders.standaloneSetup(new ShipmentController(service))
-                .setControllerAdvice(new GlobalExceptionHandler(new StaticMessageSource()))
+                .setControllerAdvice(new hu.kolozsvaripeter.parceltracker.exception.ApiExceptionHandler())
                 .build();
     }
 

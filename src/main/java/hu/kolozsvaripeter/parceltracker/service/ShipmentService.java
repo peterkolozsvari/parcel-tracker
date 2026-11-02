@@ -42,8 +42,11 @@ public class ShipmentService {
     }
 
 
-    public CreateShipmentResponseDto createShipment(CreateShipmentDto command) {
-        User sender = findSender(command.senderId());
+    public CreateShipmentResponseDto createShipment(CreateShipmentDto command, String email) {
+        User sender = findActiveUser(email);
+        if (!sender.getId().equals(command.senderId())) {
+            throw new AccessDeniedException("A shipment can only be created for the authenticated sender");
+        }
 
         Address pickupAddress = saveAddress(command.pickupAddress());
         Address deliveryAddress = saveAddress(command.deliveryAddress());
@@ -190,10 +193,9 @@ public class ShipmentService {
 
     @Transactional(readOnly = true)
     public Page<ShipmentListItemDto> getMyShipments(String email, ShipmentStatus status, Pageable pageable) {
-        User sender = userRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        User sender = findActiveUser(email);
 
-        return getShipments(status, sender.getId(), pageable);
+        return findShipments(status, sender.getId(), pageable);
     }
 
     @Transactional(readOnly = true)
@@ -208,7 +210,16 @@ public class ShipmentService {
                         shipment.getReceiverName(), shipment.getStatus(), shipment.getCreatedAt()));
     }
 
-    public Page<ShipmentListItemDto> getShipments(ShipmentStatus status, Long senderId, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<ShipmentListItemDto> getShipments(ShipmentStatus status, Long senderId, Pageable pageable, String email) {
+        User admin = findActiveUser(email);
+        if (admin.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied");
+        }
+        return findShipments(status, senderId, pageable);
+    }
+
+    private Page<ShipmentListItemDto> findShipments(ShipmentStatus status, Long senderId, Pageable pageable) {
         return shipmentRepository.findAllByFilters(status, senderId, pageable)
                 .map(shipment -> new ShipmentListItemDto(
                         shipment.getId(),
@@ -243,11 +254,11 @@ public class ShipmentService {
         );
     }
 
-    private User findSender(Long senderId) {
-        return userRepository.findById(senderId)
-                .orElseThrow(() -> new UserNotFoundException(
-                        "User not found with id: " + senderId
-                ));
+    private User findActiveUser(String email) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        if (!user.isActive()) throw new AccessDeniedException("Access denied");
+        return user;
     }
 
     private Address saveAddress(CreateAddressDto dto) {

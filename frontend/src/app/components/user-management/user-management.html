@@ -1,0 +1,55 @@
+<main class="container py-5">
+  <h1>Felhasználókezelés</h1>
+  <p>A szerepkör módosítása után az érintett felhasználónak újra be kell jelentkeznie.</p>
+  <div class="filters">
+    <label>Szerepkör
+      <select class="form-select" [(ngModel)]="role" (ngModelChange)="load()" [disabled]="loading() || savingId() !== null">
+        <option value="">Mindegyik</option>
+        @for (item of roles; track item) { <option [value]="item">{{ roleLabels[item] }}</option> }
+      </select>
+    </label>
+    <label>Állapot
+      <select class="form-select" [(ngModel)]="active" (ngModelChange)="load()" [disabled]="loading() || savingId() !== null">
+        <option value="">Mindegyik</option><option value="true">Aktív</option><option value="false">Inaktív</option>
+      </select>
+    </label>
+    <button type="button" class="btn action" (click)="load(page()?.number ?? 0)" [disabled]="loading() || savingId() !== null">Frissítés</button>
+  </div>
+  @if (error()) { <p class="alert alert-danger" role="alert">{{ error() }}</p> }
+  @if (success()) { <p class="alert alert-success" role="status">{{ success() }}</p> }
+  @if (loading()) { <p role="status">Felhasználók betöltése…</p> }
+  @else if (page(); as result) {
+    @if (users().length === 0) { <p>Nincs a szűrésnek megfelelő felhasználó.</p> }
+    @else {
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Név</th><th>Email-cím</th><th>Telefonszám</th><th>Szerepkör</th><th>Állapot</th><th>Művelet</th></tr></thead>
+          <tbody>
+            @for (user of users(); track user.id) {
+              <tr>
+                <td>{{ user.fullName }} @if (isSelf(user)) { <small>(saját fiók)</small> }</td>
+                <td>{{ user.email }}</td><td>{{ user.phoneNumber || '–' }}</td>
+                <td><select class="form-select" [(ngModel)]="user.draftRole" [attr.aria-label]="user.fullName + ' szerepköre'"
+                            [disabled]="isSelf(user) || savingId() !== null">
+                  @for (item of roles; track item) { <option [value]="item">{{ roleLabels[item] }}</option> }
+                </select></td>
+                <td><label><input type="checkbox" [(ngModel)]="user.draftActive" [disabled]="isSelf(user) || savingId() !== null"> Aktív</label></td>
+                <td><button type="button" class="btn action" (click)="save(user)"
+                            [disabled]="isSelf(user) || savingId() !== null || (user.role === user.draftRole && user.active === user.draftActive)">
+                  {{ savingId() === user.id ? 'Mentés…' : 'Mentés' }}
+                </button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    <nav class="pagination-controls" aria-label="Felhasználók lapozása">
+      <button type="button" class="btn btn-outline-secondary" (click)="load(result.number - 1)"
+              [disabled]="result.number === 0 || savingId() !== null">Előző</button>
+      <span>{{ result.totalPages ? result.number + 1 : 0 }} / {{ result.totalPages }} oldal · {{ result.totalElements }} felhasználó</span>
+      <button type="button" class="btn btn-outline-secondary" (click)="load(result.number + 1)"
+              [disabled]="result.number + 1 >= result.totalPages || savingId() !== null">Következő</button>
+    </nav>
+  }
+</main>

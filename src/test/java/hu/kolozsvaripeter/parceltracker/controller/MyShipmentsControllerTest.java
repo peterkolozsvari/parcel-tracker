@@ -101,11 +101,11 @@ class MyShipmentsControllerTest {
 
     @Test
     void adminCanStillUseGlobalList() throws Exception {
-        when(shipmentService.getShipments(isNull(), isNull(), any()))
+        when(shipmentService.getShipments(isNull(), isNull(), any(), eq("user@example.test")))
                 .thenReturn(Page.empty(PageRequest.of(0, 10)));
         mvc.perform(get("/api/shipments").session(session("ADMIN")))
                 .andExpect(status().isOk());
-        verify(shipmentService).getShipments(isNull(), isNull(), any());
+        verify(shipmentService).getShipments(isNull(), isNull(), any(), eq("user@example.test"));
     }
 
     private MockHttpSession session(String role) {
@@ -120,7 +120,7 @@ class MyShipmentsControllerTest {
 
     @Configuration
     @EnableWebMvc
-    @Import(SecurityConfig.class)
+    @Import({SecurityConfig.class, hu.kolozsvaripeter.parceltracker.exception.ApiExceptionHandler.class})
     static class TestConfig implements WebMvcConfigurer {
         @Bean ShipmentService shipmentService() { return mock(ShipmentService.class); }
         @Bean ShipmentController shipmentController(ShipmentService service) { return new ShipmentController(service); }

@@ -35,10 +35,11 @@ public class ShipmentController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateShipmentResponseDto> createShipment(@RequestBody @Valid CreateShipmentDto command) {
+    public ResponseEntity<CreateShipmentResponseDto> createShipment(@RequestBody @Valid CreateShipmentDto command,
+                                                                   Principal principal) {
         log.info("create Shipment: {}", command);
         CreateShipmentResponseDto response =
-                shipmentService.createShipment(command);
+                shipmentService.createShipment(command, principal.getName());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -101,6 +102,7 @@ public class ShipmentController {
 
     @GetMapping
     public Page<ShipmentListItemDto> getShipments(
+            Principal principal,
             @RequestParam(required = false) ShipmentStatus status,
             @RequestParam(required = false) Long senderId,
             @PageableDefault(
@@ -109,6 +111,6 @@ public class ShipmentController {
                     direction = Sort.Direction.DESC
             ) Pageable pageable
     ) {
-        return shipmentService.getShipments(status, senderId, pageable);
+        return shipmentService.getShipments(status, senderId, pageable, principal.getName());
     }
 }
