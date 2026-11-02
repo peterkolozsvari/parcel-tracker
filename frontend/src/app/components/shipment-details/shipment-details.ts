@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -6,10 +6,12 @@ import {EMPTY, Subject, Subscription, catchError, combineLatest, startWith, swit
 import {ShipmentService} from '../../services/shipment.service';
 import {SHIPMENT_STATUS_LABELS, ShipmentDetails as ShipmentDetailsModel} from '../../models/shipment.model';
 import {TrackingEvent} from '../../models/tracking-event.model';
+import {AuthService} from '../../services/auth.service';
+import {ShipmentActions} from '../shipment-actions/shipment-actions';
 
 @Component({
   selector: 'app-shipment-details',
-  imports: [DatePipe, DecimalPipe, RouterLink],
+  imports: [DatePipe, DecimalPipe, RouterLink, ShipmentActions],
   templateUrl: './shipment-details.html',
   styleUrl: './shipment-details.css'
 })
@@ -18,6 +20,9 @@ export class ShipmentDetails implements OnInit {
   private readonly router = inject(Router);
   private readonly shipmentService = inject(ShipmentService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly auth = inject(AuthService);
+  readonly listRoute = computed(() => this.auth.currentUser()?.role === 'ADMIN' ? '/admin/shipments'
+    : this.auth.currentUser()?.role === 'COURIER' ? '/courier/shipments' : '/my-shipments');
   private readonly reload = new Subject<void>();
   private historyRequest?: Subscription;
 
