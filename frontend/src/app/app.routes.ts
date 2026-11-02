@@ -43,6 +43,12 @@ export const routes: Routes = [
         .then(m => m.Registration)
   },
   {
+    path: 'my-shipments',
+    loadComponent: () =>
+      import('./components/my-shipments/my-shipments')
+        .then(m => m.MyShipments)
+  },
+  {
     path: 'my-profile',
     loadComponent: () =>
       import('./components/my-profile/my-profile')
@@ -59,4 +65,5 @@ export const routes: Routes = [
     redirectTo: 'page-not-found'
   }
 ];
+
 
