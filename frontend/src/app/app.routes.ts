@@ -31,6 +31,12 @@ export const routes: Routes = [
         .then(m => m.ShipmentSuccessfullyCreated)
   },
   {
+    path: 'shipments/:id',
+    loadComponent: () =>
+      import('./components/shipment-details/shipment-details')
+        .then(m => m.ShipmentDetails)
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./components/login/login')
