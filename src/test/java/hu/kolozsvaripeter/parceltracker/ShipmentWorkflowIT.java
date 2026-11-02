@@ -35,6 +35,7 @@ class ShipmentWorkflowIT {
     @Autowired UserRepository users;
     @Autowired PasswordEncoder encoder;
     @Autowired JdbcTemplate jdbc;
+    @Autowired hu.kolozsvaripeter.parceltracker.service.ShipmentService shipments;
 
     @DynamicPropertySource
     static void database(DynamicPropertyRegistry properties) {
@@ -151,6 +152,49 @@ class ShipmentWorkflowIT {
         assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM addresses",Integer.class));
         customer.send("POST","/api/shipments",shipment(sender.getId(),"No token"),null,null,403);
         assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM shipments",Integer.class));
+    }
+
+    @Test void databaseFailureRollsBackTheWholeShipmentTransaction() {
+        User sender=seed("sender",Role.CUSTOMER);
+        var address=new hu.kolozsvaripeter.parceltracker.dto.incoming.CreateAddressDto(
+            "Hungary","1211","Budapest","Rollback street","1",null);
+        var parcel=new hu.kolozsvaripeter.parceltracker.dto.incoming.CreateParcelDto(
+            new java.math.BigDecimal("-1"),"Rejected by database constraint",false);
+        var command=new hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto(
+            sender.getId(),address,"Rollback receiver",address,List.of(parcel));
+        // Deliberately bypass controller validation to test the real database transaction boundary.
+        assertThrows(org.springframework.dao.DataIntegrityViolationException.class,
+            () -> shipments.createShipment(command,sender.getEmail()));
+        for(String table:List.of("shipments","addresses","parcels","tracking_events")) {
+            assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM "+table,Integer.class));
+        }
+    }
+
+    @Test void simultaneousCourierAssignmentsProduceOneWinnerAndOneHistoryEntry() throws Exception {
+        User sender=seed("sender",Role.CUSTOMER),admin=seed("admin",Role.ADMIN);
+        User first=seed("first-courier",Role.COURIER),second=seed("second-courier",Role.COURIER);
+        long id=login(sender).mutate("POST","/api/shipments",shipment(sender.getId(),"Race receiver"),201).path("id").asLong();
+        var start=new java.util.concurrent.CountDownLatch(1);
+        try(var pool=java.util.concurrent.Executors.newFixedThreadPool(2)) {
+            List<java.util.concurrent.Future<Integer>> attempts=new ArrayList<>();
+            for(User courier:List.of(first,second)) {
+                attempts.add(pool.submit(() -> {
+                    start.await();
+                    try {
+                        shipments.assignCourier(id,new hu.kolozsvaripeter.parceltracker.dto.incoming.AssignCourierDto(courier.getId()),admin.getEmail());
+                        return 204;
+                    } catch(hu.kolozsvaripeter.parceltracker.exception.ShipmentStateConflictException conflict) {
+                        return 409;
+                    }
+                }));
+            }
+            start.countDown();
+            List<Integer> results=new ArrayList<>();
+            for(var attempt:attempts)results.add(attempt.get(15,java.util.concurrent.TimeUnit.SECONDS));
+            Collections.sort(results);assertEquals(List.of(204,409),results);
+        }
+        assertEquals(2,jdbc.queryForObject("SELECT count(*) FROM tracking_events WHERE shipment_id = ?",Integer.class,id));
+        assertEquals("COURIER_ASSIGNED",jdbc.queryForObject("SELECT status FROM shipments WHERE id = ?",String.class,id));
     }
 
     private User seed(String prefix,Role role) {
