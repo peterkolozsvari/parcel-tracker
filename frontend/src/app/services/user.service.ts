@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, switchMap} from 'rxjs';
-import {CreateUserCommand, UpdateUserProfile, UserDetails} from '../models/user.model';
+import {CourierListItem, CreateUserCommand, UpdateUserProfile, UserDetails} from '../models/user.model';
 import {API_ENDPOINTS} from '../config/api.config';
 import {CsrfService} from './csrf.service';
 
@@ -14,6 +14,10 @@ export class UserService {
 
   private readonly http = inject(HttpClient);
   private readonly csrfService = inject(CsrfService);
+
+  getActiveCouriers(): Observable<CourierListItem[]> {
+    return this.http.get<CourierListItem[]>(`${BASE_URL}/couriers`, {withCredentials: true});
+  }
 
 
   createUser(command: CreateUserCommand): Observable<void> {
@@ -65,3 +69,4 @@ export class UserService {
     );
   }
 }
+
