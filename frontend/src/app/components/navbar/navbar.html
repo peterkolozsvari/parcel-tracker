@@ -104,8 +104,10 @@
 
                   <button
                     type="button"
-                    class="profile-menu-item">
-                    Csomagjaim
+                    class="profile-menu-item"
+                    routerLink="/my-shipments"
+                    (click)="closeProfileMenu(); menuOpen.set(false)">
+                    Küldeményeim
                   </button>
 
                   <div class="profile-menu-divider"></div>
@@ -130,3 +132,4 @@
     </div>
   </nav>
 </header>
+
