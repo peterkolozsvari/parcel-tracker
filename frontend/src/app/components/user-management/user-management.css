@@ -1,0 +1,9 @@
+.filters { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1.5rem 0; }
+.filters label { min-width: 180px; }
+.action { background: #00878b; color: white; }
+.action:hover { background: #006a6e; color: white; }
+.action:disabled { background: #708a8b; color: white; }
+table { min-width: 850px; }
+td, th { padding: 1rem .6rem; }
+.pagination-controls { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+small { color: #536467; }
