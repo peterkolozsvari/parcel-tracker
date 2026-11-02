@@ -32,6 +32,41 @@
         <div class="card-body">
           <h2 class="h4 mb-3">{{ section.title }}</h2>
 
+          @if (section.name === 'pickupAddress' && isProfileLoading()) {
+            <p class="mb-0" role="status">Mentett cím betöltése…</p>
+          } @else if (section.name === 'pickupAddress' && profileLoadError()) {
+            <div class="alert alert-danger" role="alert">{{ profileLoadError() }}</div>
+            <button type="button" class="btn btn-outline-primary" (click)="loadUserProfile()">
+              Újrapróbálás
+            </button>
+          } @else if (section.name === 'pickupAddress' && !editingPickupAddress()) {
+            @if (savedPickupAddress(); as address) {
+              <p class="text-muted">A profilodban mentett feladási címet használjuk.</p>
+              <address class="mb-3">
+                {{ address.country }}<br>
+                {{ address.postalCode }} {{ address.city }}<br>
+                {{ address.street }} {{ address.houseNumber }}
+                @if (address.door) {
+                  <br>{{ address.door }}
+                }
+              </address>
+              <button type="button" class="btn btn-outline-primary"
+                      (click)="editingPickupAddress.set(true)">
+                Másik felvételi cím megadása
+              </button>
+            }
+          } @else {
+          @if (section.name === 'pickupAddress') {
+            <p class="text-muted">
+              Az itt megadott cím csak ehhez a küldeményhez tartozik.
+            </p>
+            @if (savedPickupAddress()) {
+              <button type="button" class="btn btn-outline-secondary mb-3"
+                      (click)="useSavedPickupAddress()">
+                Mentett cím használata
+              </button>
+            }
+          }
           <div class="row g-3">
             @for (field of addressFields; track field.name) {
               <div class="col-12 col-md-6">
@@ -61,6 +96,7 @@
               </div>
             }
           </div>
+          }
         </div>
       </section>
     }
@@ -152,9 +188,15 @@
       </div>
     </section>
 
+    @if (errorMessage()) {
+      <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+    }
+
     <button type="submit"
-            class="btn btn-primary btn-lg">
-      Küldemény feladása
+            class="btn btn-primary btn-lg"
+            [disabled]="isProfileLoading() || !!profileLoadError() || isSubmitting()">
+      {{ isSubmitting() ? 'Feladás folyamatban…' : 'Küldemény feladása' }}
     </button>
   </form>
 </div>
+
