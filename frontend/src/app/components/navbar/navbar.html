@@ -110,6 +110,15 @@
                     Küldeményeim
                   </button>
 
+                  @if (user.role === 'ADMIN') {
+                    <button type="button" class="profile-menu-item" routerLink="/admin/shipments"
+                            (click)="closeProfileMenu(); menuOpen.set(false)">Küldeménykezelés</button>
+                  }
+                  @if (user.role === 'COURIER') {
+                    <button type="button" class="profile-menu-item" routerLink="/courier/shipments"
+                            (click)="closeProfileMenu(); menuOpen.set(false)">Futárfeladatok</button>
+                  }
+
                   <div class="profile-menu-divider"></div>
 
                   <button
