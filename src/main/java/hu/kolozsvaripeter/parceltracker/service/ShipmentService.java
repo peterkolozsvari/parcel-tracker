@@ -6,11 +6,13 @@ import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateParcelDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.*;
 import hu.kolozsvaripeter.parceltracker.enums.ShipmentStatus;
+import hu.kolozsvaripeter.parceltracker.enums.Role;
 import hu.kolozsvaripeter.parceltracker.exception.ShipmentNotFoundException;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,22 +53,34 @@ public class ShipmentService {
         return new CreateShipmentResponseDto(shipment.getId(), shipment.getTrackingNumber());
     }
 
-    public ShipmentDetailsDto getShipmentById(Long id) {
+    @Transactional(readOnly = true)
+    public ShipmentDetailsDto getShipmentById(Long id, String email) {
         Shipment shipment = shipmentRepository.findById(id)
                 .orElseThrow(() -> new ShipmentNotFoundException(
                         "Shipment not found with id: " + id
                 ));
 
+        checkShipmentAccess(shipment, email);
         return toShipmentDetailsDto(shipment);
     }
 
-    public ShipmentDetailsDto getShipmentByTrackingNumber(String trackingNumber) {
+    @Transactional(readOnly = true)
+    public ShipmentDetailsDto getShipmentByTrackingNumber(String trackingNumber, String email) {
         Shipment shipment = shipmentRepository.findByTrackingNumber(trackingNumber)
                 .orElseThrow(() -> new ShipmentNotFoundException(
                         "Shipment not found with tracking number: " + trackingNumber
                 ));
 
+        checkShipmentAccess(shipment, email);
         return toShipmentDetailsDto(shipment);
+    }
+
+    private void checkShipmentAccess(Shipment shipment, String email) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        if (user.getRole() != Role.ADMIN && !user.getId().equals(shipment.getSender().getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
     }
 
     @Transactional(readOnly = true)
