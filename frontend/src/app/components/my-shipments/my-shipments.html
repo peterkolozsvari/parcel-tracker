@@ -58,7 +58,9 @@
             <tbody>
               @for (shipment of page.content; track shipment.id) {
                 <tr>
-                  <td class="tracking-number" data-label="Követési szám">{{ shipment.trackingNumber }}</td>
+                  <td class="tracking-number" data-label="Követési szám">
+                    <a [routerLink]="['/shipments', shipment.id]">{{ shipment.trackingNumber }}</a>
+                  </td>
                   <td data-label="Címzett">{{ shipment.receiverName }}</td>
                   <td data-label="Státusz">
                     <span class="status-badge" [attr.data-status]="shipment.status">
