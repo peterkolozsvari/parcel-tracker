@@ -101,11 +101,11 @@ class MyShipmentsControllerTest {
 
     @Test
     void adminCanStillUseGlobalList() throws Exception {
-        when(shipmentService.getShipments(isNull(), isNull(), any()))
+        when(shipmentService.getShipments(isNull(), isNull(), any(), eq("user@example.test")))
                 .thenReturn(Page.empty(PageRequest.of(0, 10)));
         mvc.perform(get("/api/shipments").session(session("ADMIN")))
                 .andExpect(status().isOk());
-        verify(shipmentService).getShipments(isNull(), isNull(), any());
+        verify(shipmentService).getShipments(isNull(), isNull(), any(), eq("user@example.test"));
     }
 
     private MockHttpSession session(String role) {
