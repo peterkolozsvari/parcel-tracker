@@ -39,7 +39,7 @@ export class UserService {
 
 
   getUserById(userId: number): Observable<UserDetails> {
-    return this.http.get<UserDetails>(`${BASE_URL}/${userId}`);
+    return this.http.get<UserDetails>(`${BASE_URL}/${userId}`, {withCredentials: true});
   }
 
   updateUser(
