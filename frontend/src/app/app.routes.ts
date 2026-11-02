@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {roleGuard} from './guards/role.guard';
+import {authGuard} from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -33,18 +34,21 @@ export const routes: Routes = [
   },
   {
     path: 'shipments/new',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./components/create-shipment/create-shipment')
         .then(m => m.CreateShipment)
   },
   {
     path: 'shipments/success',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./components/shipment-successfully-created/shipment-successfully-created')
         .then(m => m.ShipmentSuccessfullyCreated)
   },
   {
     path: 'shipments/:id',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./components/shipment-details/shipment-details')
         .then(m => m.ShipmentDetails)
@@ -63,12 +67,14 @@ export const routes: Routes = [
   },
   {
     path: 'my-shipments',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./components/my-shipments/my-shipments')
         .then(m => m.MyShipments)
   },
   {
     path: 'my-profile',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./components/my-profile/my-profile')
         .then(m => m.MyProfile)
