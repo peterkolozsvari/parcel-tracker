@@ -69,6 +69,14 @@ public class ShipmentService {
         return toShipmentDetailsDto(shipment);
     }
 
+    @Transactional(readOnly = true)
+    public Page<ShipmentListItemDto> getMyShipments(String email, ShipmentStatus status, Pageable pageable) {
+        User sender = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+
+        return getShipments(status, sender.getId(), pageable);
+    }
+
     public Page<ShipmentListItemDto> getShipments(ShipmentStatus status, Long senderId, Pageable pageable) {
         return shipmentRepository.findAllByFilters(status, senderId, pageable)
                 .map(shipment -> new ShipmentListItemDto(
@@ -216,3 +224,4 @@ public class ShipmentService {
         );
     }
 }
+
