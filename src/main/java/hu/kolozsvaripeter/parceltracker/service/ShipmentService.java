@@ -4,10 +4,12 @@ import hu.kolozsvaripeter.parceltracker.domain.*;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateAddressDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateParcelDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
+import hu.kolozsvaripeter.parceltracker.dto.incoming.AssignCourierDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.*;
 import hu.kolozsvaripeter.parceltracker.enums.ShipmentStatus;
 import hu.kolozsvaripeter.parceltracker.enums.Role;
 import hu.kolozsvaripeter.parceltracker.exception.ShipmentNotFoundException;
+import hu.kolozsvaripeter.parceltracker.exception.ShipmentStateConflictException;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.*;
 import org.springframework.data.domain.Page;
@@ -51,6 +53,37 @@ public class ShipmentService {
         saveInitialTrackingEvent(shipment, sender);
 
         return new CreateShipmentResponseDto(shipment.getId(), shipment.getTrackingNumber());
+    }
+
+    public void assignCourier(Long shipmentId, AssignCourierDto command, String email) {
+        User admin = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        if (!admin.isActive() || admin.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        Shipment shipment = shipmentRepository.findByIdForUpdate(shipmentId)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with id: " + shipmentId));
+        if (shipment.getStatus() != ShipmentStatus.REGISTERED || shipment.getCourier() != null) {
+            throw new ShipmentStateConflictException("Only an unassigned registered shipment can be assigned to a courier");
+        }
+
+        User courier = userRepository.findById(command.courierId())
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + command.courierId()));
+        if (!courier.isActive() || courier.getRole() != Role.COURIER) {
+            throw new IllegalArgumentException("The selected user must be an active courier");
+        }
+
+        shipment.setCourier(courier);
+        shipment.setStatus(ShipmentStatus.COURIER_ASSIGNED);
+        shipmentRepository.save(shipment);
+
+        TrackingEvent event = new TrackingEvent();
+        event.setShipment(shipment);
+        event.setChangedByUser(admin);
+        event.setStatus(ShipmentStatus.COURIER_ASSIGNED);
+        event.setDescription("Futár hozzárendelve a küldeményhez.");
+        trackingEventRepository.save(event);
     }
 
     @Transactional(readOnly = true)
