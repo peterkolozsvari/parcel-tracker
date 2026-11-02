@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -63,7 +64,7 @@ class MyShipmentsControllerTest {
     @Test
     void usesSessionEmailAndIgnoresClientSuppliedSenderId() throws Exception {
         when(shipmentService.getMyShipments(eq("user@example.test"), isNull(), any()))
-                .thenReturn(Page.empty());
+                .thenReturn(Page.empty(PageRequest.of(0, 10)));
 
         mvc.perform(get("/api/shipments/my").session(session("CUSTOMER"))
                         .param("senderId", "999"))
@@ -79,7 +80,7 @@ class MyShipmentsControllerTest {
     @Test
     void acceptsStatusFilterAndPageParameters() throws Exception {
         when(shipmentService.getMyShipments(eq("user@example.test"), eq(ShipmentStatus.REGISTERED), any()))
-                .thenReturn(Page.empty());
+                .thenReturn(Page.empty(PageRequest.of(1, 5)));
 
         mvc.perform(get("/api/shipments/my").session(session("CUSTOMER"))
                         .param("status", "REGISTERED").param("page", "1").param("size", "5"))
@@ -100,7 +101,8 @@ class MyShipmentsControllerTest {
 
     @Test
     void adminCanStillUseGlobalList() throws Exception {
-        when(shipmentService.getShipments(isNull(), isNull(), any())).thenReturn(Page.empty());
+        when(shipmentService.getShipments(isNull(), isNull(), any()))
+                .thenReturn(Page.empty(PageRequest.of(0, 10)));
         mvc.perform(get("/api/shipments").session(session("ADMIN")))
                 .andExpect(status().isOk());
         verify(shipmentService).getShipments(isNull(), isNull(), any());
