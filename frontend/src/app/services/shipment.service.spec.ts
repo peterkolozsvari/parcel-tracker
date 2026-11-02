@@ -4,6 +4,7 @@ import {HttpTestingController, provideHttpClientTesting} from '@angular/common/h
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {ShipmentService} from './shipment.service';
 import {API_ENDPOINTS} from '../config/api.config';
+import {UserService} from './user.service';
 
 describe('ShipmentService own shipments', () => {
   let service: ShipmentService;
@@ -15,6 +16,49 @@ describe('ShipmentService own shipments', () => {
     http = TestBed.inject(HttpTestingController);
   });
   afterEach(() => http.verify());
+
+  it('loads the active courier directory with the session cookie', () => {
+    TestBed.inject(UserService).getActiveCouriers().subscribe();
+    const request = http.expectOne(`${API_ENDPOINTS.users}/couriers`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.withCredentials).toBe(true);
+    request.flush([]);
+  });
+
+  it('loads separate admin and courier endpoints without a client supplied courier ID', () => {
+    service.getAllShipments(1, 'REGISTERED').subscribe();
+    let request = http.expectOne(req => req.url === API_ENDPOINTS.shipments);
+    expect(request.request.params.get('status')).toBe('REGISTERED');
+    expect(request.request.withCredentials).toBe(true);
+    request.flush({content: []});
+    service.getAssignedShipments().subscribe();
+    request = http.expectOne(req => req.url === `${API_ENDPOINTS.shipments}/assigned`);
+    expect(request.request.params.has('courierId')).toBe(false);
+    expect(request.request.withCredentials).toBe(true);
+    request.flush({content: []});
+  });
+
+  it('assigns courier with CSRF token and session cookie', () => {
+    service.assignCourier(2, 7).subscribe();
+    http.expectOne(API_ENDPOINTS.csrf).flush({token: 'test-token', headerName: 'X-CSRF-TOKEN'});
+    const request = http.expectOne(`${API_ENDPOINTS.shipments}/2/courier`);
+    expect(request.request.method).toBe('PATCH');
+    expect(request.request.withCredentials).toBe(true);
+    expect(request.request.headers.get('X-CSRF-TOKEN')).toBe('test-token');
+    expect(request.request.body).toEqual({courierId: 7});
+    request.flush(null);
+  });
+
+  it('updates status with CSRF token and optional description', () => {
+    service.updateStatus(2, 'PICKED_UP', 'Átvettem').subscribe();
+    http.expectOne(API_ENDPOINTS.csrf).flush({token: 'test-token', headerName: 'X-CSRF-TOKEN'});
+    const request = http.expectOne(`${API_ENDPOINTS.shipments}/2/status`);
+    expect(request.request.method).toBe('PATCH');
+    expect(request.request.withCredentials).toBe(true);
+    expect(request.request.headers.get('X-CSRF-TOKEN')).toBe('test-token');
+    expect(request.request.body).toEqual({status: 'PICKED_UP', description: 'Átvettem'});
+    request.flush(null);
+  });
 
   it('loads tracking events with the session cookie', () => {
     service.getTrackingEvents(25).subscribe();
