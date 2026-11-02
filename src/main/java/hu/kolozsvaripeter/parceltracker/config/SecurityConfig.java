@@ -49,6 +49,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/shipments").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
@@ -89,3 +90,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
