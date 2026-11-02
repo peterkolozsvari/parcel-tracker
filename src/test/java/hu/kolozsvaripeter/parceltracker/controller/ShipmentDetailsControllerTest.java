@@ -57,4 +57,28 @@ class ShipmentDetailsControllerTest {
         mvc.perform(get("/api/shipments/999").principal(() -> "owner@example.test"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void trackingEventsUsePrincipalAndIgnoreClientEmail() throws Exception {
+        mvc.perform(get("/api/shipments/2/tracking-events").principal(() -> "owner@example.test")
+                        .param("email", "someone-else@example.test"))
+                .andExpect(status().isOk());
+        verify(service).getTrackingEvents(2L, "owner@example.test");
+    }
+
+    @Test
+    void trackingEventsDenyAnotherUsersAccess() throws Exception {
+        when(service.getTrackingEvents(2L, "other@example.test"))
+                .thenThrow(new AccessDeniedException("Access denied"));
+        mvc.perform(get("/api/shipments/2/tracking-events").principal(() -> "other@example.test"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void trackingEventsForMissingShipmentReturn404() throws Exception {
+        when(service.getTrackingEvents(999L, "owner@example.test"))
+                .thenThrow(new ShipmentNotFoundException("Shipment not found"));
+        mvc.perform(get("/api/shipments/999/tracking-events").principal(() -> "owner@example.test"))
+                .andExpect(status().isNotFound());
+    }
 }
