@@ -5,13 +5,16 @@ import hu.kolozsvaripeter.parceltracker.domain.User;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateUserCommandDto;
 import hu.kolozsvaripeter.parceltracker.dto.incoming.UpdateUserProfileDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
+import hu.kolozsvaripeter.parceltracker.dto.outgoing.CourierListItemDto;
 import hu.kolozsvaripeter.parceltracker.enums.Role;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
 import hu.kolozsvaripeter.parceltracker.repository.AddressRepository;
 import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 
 @Service
@@ -47,6 +50,17 @@ public class UserService {
         );
 
         userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CourierListItemDto> getActiveCouriers(String email) {
+        User admin = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        if (!admin.isActive() || admin.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied");
+        }
+        return userRepository.findAllByRoleAndActiveTrueOrderByFullNameAscIdAsc(Role.COURIER)
+                .stream().map(user -> new CourierListItemDto(user.getId(), user.getFullName())).toList();
     }
 
     public UserDetailsDto getUserById(Long id) {
@@ -93,3 +107,4 @@ public class UserService {
         userRepository.save(user);
     }
 }
+
