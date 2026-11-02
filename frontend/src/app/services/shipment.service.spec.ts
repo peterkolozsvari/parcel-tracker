@@ -16,6 +16,14 @@ describe('ShipmentService own shipments', () => {
   });
   afterEach(() => http.verify());
 
+  it('loads tracking events with the session cookie', () => {
+    service.getTrackingEvents(25).subscribe();
+    const request = http.expectOne(`${API_ENDPOINTS.shipments}/25/tracking-events`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.withCredentials).toBe(true);
+    request.flush([]);
+  });
+
   it('loads shipment details with the session cookie', () => {
     service.getShipmentById(25).subscribe();
     const request = http.expectOne(`${API_ENDPOINTS.shipments}/25`);
