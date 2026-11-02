@@ -2,6 +2,11 @@ import {CreateAddress} from './address.model';
 
 export type Role = 'CUSTOMER' | 'COURIER' | 'ADMIN';
 
+export interface CourierListItem {
+  id: number;
+  fullName: string;
+}
+
 export interface UserDetails {
   id: number;
   fullName: string;
@@ -24,3 +29,4 @@ export interface UpdateUserProfile {
   phoneNumber?: string | null;
   address?: CreateAddress | null;
 }
+
