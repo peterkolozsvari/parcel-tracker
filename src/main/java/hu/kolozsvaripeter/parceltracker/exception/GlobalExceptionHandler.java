@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -66,6 +67,12 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(body, status);
 
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleUnreadableRequest(HttpMessageNotReadableException ex) {
+        return ResponseEntity.badRequest()
+                .body(new ApiError("JSON_PARSE_ERROR", "The request body is invalid", null));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
