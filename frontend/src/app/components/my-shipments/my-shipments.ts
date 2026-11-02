@@ -4,7 +4,7 @@ import {Router, RouterLink} from '@angular/router';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Subscription} from 'rxjs';
 import {ShipmentService} from '../../services/shipment.service';
-import {ShipmentListItem, ShipmentStatus} from '../../models/shipment.model';
+import {SHIPMENT_STATUS_LABELS, ShipmentListItem, ShipmentStatus} from '../../models/shipment.model';
 import {PageResponse} from '../../models/page-response.model';
 
 @Component({
@@ -23,15 +23,7 @@ export class MyShipments implements OnInit {
   readonly selectedStatus = signal<ShipmentStatus | ''>('');
   readonly loading = signal(false);
   readonly errorMessage = signal('');
-  readonly statusLabels: Record<ShipmentStatus, string> = {
-    REGISTERED: 'Rögzítve',
-    COURIER_ASSIGNED: 'Futár hozzárendelve',
-    PICKED_UP: 'Felvéve',
-    IN_TRANSIT: 'Szállítás alatt',
-    DELIVERED: 'Kézbesítve',
-    DELIVERY_FAILED: 'Sikertelen kézbesítés',
-    CANCELLED: 'Törölve'
-  };
+  readonly statusLabels = SHIPMENT_STATUS_LABELS;
   readonly statusOptions = Object.entries(this.statusLabels);
 
   ngOnInit(): void {
