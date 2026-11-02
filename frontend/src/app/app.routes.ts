@@ -1,6 +1,19 @@
 import {Routes} from '@angular/router';
+import {roleGuard} from './guards/role.guard';
 
 export const routes: Routes = [
+  {
+    path: 'admin/shipments',
+    canActivate: [roleGuard],
+    data: {role: 'ADMIN'},
+    loadComponent: () => import('./components/shipment-management/shipment-management').then(m => m.ShipmentManagement)
+  },
+  {
+    path: 'courier/shipments',
+    canActivate: [roleGuard],
+    data: {role: 'COURIER'},
+    loadComponent: () => import('./components/shipment-management/shipment-management').then(m => m.ShipmentManagement)
+  },
   {
     path: '',
     redirectTo: 'home',
