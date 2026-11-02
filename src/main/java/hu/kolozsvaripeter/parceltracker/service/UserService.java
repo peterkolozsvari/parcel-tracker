@@ -8,6 +8,7 @@ import hu.kolozsvaripeter.parceltracker.dto.outgoing.UserDetailsDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.CourierListItemDto;
 import hu.kolozsvaripeter.parceltracker.enums.Role;
 import hu.kolozsvaripeter.parceltracker.exception.UserNotFoundException;
+import hu.kolozsvaripeter.parceltracker.exception.DuplicateEmailException;
 import hu.kolozsvaripeter.parceltracker.repository.AddressRepository;
 import hu.kolozsvaripeter.parceltracker.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,8 +36,7 @@ public class UserService {
 
     public void createUser(CreateUserCommandDto command) {
         if (userRepository.existsByEmailIgnoreCase(command.email())) {
-            throw new IllegalArgumentException(
-                    "A user with this email already exists");
+            throw new DuplicateEmailException();
         }
 
         String passwordHash = passwordEncoder.encode(command.password());
