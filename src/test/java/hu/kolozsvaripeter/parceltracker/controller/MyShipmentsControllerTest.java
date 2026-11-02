@@ -120,7 +120,7 @@ class MyShipmentsControllerTest {
 
     @Configuration
     @EnableWebMvc
-    @Import(SecurityConfig.class)
+    @Import({SecurityConfig.class, hu.kolozsvaripeter.parceltracker.exception.ApiExceptionHandler.class})
     static class TestConfig implements WebMvcConfigurer {
         @Bean ShipmentService shipmentService() { return mock(ShipmentService.class); }
         @Bean ShipmentController shipmentController(ShipmentService service) { return new ShipmentController(service); }
