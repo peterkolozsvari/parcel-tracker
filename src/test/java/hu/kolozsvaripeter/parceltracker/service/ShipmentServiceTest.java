@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -116,6 +117,8 @@ class ShipmentServiceTest {
 
     @Test
     void getShipmentByIdReturnsShipmentDetails() {
+        when(userRepository.findByEmailIgnoreCase("anna@example.test"))
+                .thenReturn(Optional.of(shipment.getSender()));
         // Arrange
         when(shipmentRepository.findById(2L))
                 .thenReturn(Optional.of(shipment));
@@ -124,7 +127,7 @@ class ShipmentServiceTest {
                 .thenReturn(List.of(parcel));
 
         // Act
-        ShipmentDetailsDto result = shipmentService.getShipmentById(2L);
+        ShipmentDetailsDto result = shipmentService.getShipmentById(2L, "anna@example.test");
 
         // Assert
         assertEquals(expectedDetails(), result);
@@ -132,6 +135,8 @@ class ShipmentServiceTest {
 
     @Test
     void getShipmentByTrackingNumberReturnsShipmentDetails() {
+        when(userRepository.findByEmailIgnoreCase("anna@example.test"))
+                .thenReturn(Optional.of(shipment.getSender()));
         // Arrange
         when(shipmentRepository.findByTrackingNumber("TEST234567"))
                 .thenReturn(Optional.of(shipment));
@@ -141,7 +146,7 @@ class ShipmentServiceTest {
 
         // Act
         ShipmentDetailsDto result =
-                shipmentService.getShipmentByTrackingNumber("TEST234567");
+                shipmentService.getShipmentByTrackingNumber("TEST234567", "anna@example.test");
 
         // Assert
         assertEquals(expectedDetails(), result);
@@ -156,7 +161,7 @@ class ShipmentServiceTest {
         // Act and assert
         ShipmentNotFoundException exception = assertThrows(
                 ShipmentNotFoundException.class,
-                () -> shipmentService.getShipmentById(999L)
+                () -> shipmentService.getShipmentById(999L, "anna@example.test")
         );
 
         assertEquals(
@@ -176,7 +181,7 @@ class ShipmentServiceTest {
         // Act and assert
         assertThrows(
                 ShipmentNotFoundException.class,
-                () -> shipmentService.getShipmentByTrackingNumber("MISSING234")
+                () -> shipmentService.getShipmentByTrackingNumber("MISSING234", "anna@example.test")
         );
 
         verifyNoInteractions(parcelRepository);
@@ -184,6 +189,8 @@ class ShipmentServiceTest {
 
     @Test
     void getShipmentByIdReturnsNullCourierWhenNotAssigned() {
+        when(userRepository.findByEmailIgnoreCase("anna@example.test"))
+                .thenReturn(Optional.of(shipment.getSender()));
         // Arrange
         shipment.setCourier(null);
         shipment.setStatus(ShipmentStatus.REGISTERED);
@@ -195,13 +202,51 @@ class ShipmentServiceTest {
                 .thenReturn(List.of(parcel));
 
         // Act
-        ShipmentDetailsDto result = shipmentService.getShipmentById(2L);
+        ShipmentDetailsDto result = shipmentService.getShipmentById(2L, "anna@example.test");
 
         // Assert
         assertNull(result.courier());
         assertEquals(ShipmentStatus.REGISTERED, result.status());
         assertEquals(2L, result.id());
         assertEquals(1, result.parcels().size());
+    }
+
+    @Test
+    void anotherCustomerCannotReadShipmentById() {
+        User other = new User();
+        other.setId(99L);
+        other.setRole(Role.CUSTOMER);
+        when(userRepository.findByEmailIgnoreCase("other@example.test")).thenReturn(Optional.of(other));
+        when(shipmentRepository.findById(2L)).thenReturn(Optional.of(shipment));
+
+        assertThrows(AccessDeniedException.class,
+                () -> shipmentService.getShipmentById(2L, "other@example.test"));
+        verifyNoInteractions(parcelRepository);
+    }
+
+    @Test
+    void anotherCustomerCannotReadShipmentByTrackingNumber() {
+        User other = new User();
+        other.setId(99L);
+        other.setRole(Role.CUSTOMER);
+        when(userRepository.findByEmailIgnoreCase("other@example.test")).thenReturn(Optional.of(other));
+        when(shipmentRepository.findByTrackingNumber("TEST234567")).thenReturn(Optional.of(shipment));
+
+        assertThrows(AccessDeniedException.class,
+                () -> shipmentService.getShipmentByTrackingNumber("TEST234567", "other@example.test"));
+        verifyNoInteractions(parcelRepository);
+    }
+
+    @Test
+    void adminCanReadAnotherUsersShipment() {
+        User admin = new User();
+        admin.setId(99L);
+        admin.setRole(Role.ADMIN);
+        when(userRepository.findByEmailIgnoreCase("admin@example.test")).thenReturn(Optional.of(admin));
+        when(shipmentRepository.findById(2L)).thenReturn(Optional.of(shipment));
+        when(parcelRepository.findAllByShipmentId(2L)).thenReturn(List.of(parcel));
+
+        assertEquals(expectedDetails(), shipmentService.getShipmentById(2L, "admin@example.test"));
     }
 
     private ShipmentDetailsDto expectedDetails() {
