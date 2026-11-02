@@ -180,7 +180,10 @@ public class ShipmentService {
     private void checkShipmentAccess(Shipment shipment, String email) {
         User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
-        if (user.getRole() != Role.ADMIN && !user.getId().equals(shipment.getSender().getId())) {
+        boolean assignedCourier = user.getRole() == Role.COURIER && shipment.getCourier() != null
+                && user.getId().equals(shipment.getCourier().getId());
+        if (!user.isActive() || (user.getRole() != Role.ADMIN
+                && !user.getId().equals(shipment.getSender().getId()) && !assignedCourier)) {
             throw new AccessDeniedException("Access denied");
         }
     }
@@ -191,6 +194,18 @@ public class ShipmentService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
 
         return getShipments(status, sender.getId(), pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ShipmentListItemDto> getAssignedShipments(String email, ShipmentStatus status, Pageable pageable) {
+        User courier = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        if (!courier.isActive() || courier.getRole() != Role.COURIER) {
+            throw new AccessDeniedException("Access denied");
+        }
+        return shipmentRepository.findAssignedToCourier(courier.getId(), status, pageable)
+                .map(shipment -> new ShipmentListItemDto(shipment.getId(), shipment.getTrackingNumber(),
+                        shipment.getReceiverName(), shipment.getStatus(), shipment.getCreatedAt()));
     }
 
     public Page<ShipmentListItemDto> getShipments(ShipmentStatus status, Long senderId, Pageable pageable) {
