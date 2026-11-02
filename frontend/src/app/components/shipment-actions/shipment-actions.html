@@ -1,0 +1,39 @@
+@if (canAssign() || nextStatuses().length) {
+  <section class="actions-panel" aria-labelledby="actions-heading" [attr.aria-busy]="busy()">
+    <h2 id="actions-heading">Küldemény kezelése</h2>
+    @if (errorMessage()) { <p class="error-message" role="alert">{{ errorMessage() }}</p> }
+    @if (canAssign()) {
+      @if (couriersLoading()) {
+        <p role="status">Futárok betöltése…</p>
+      } @else if (couriersError()) {
+        <p class="error-message" role="alert">{{ couriersError() }}</p>
+        <button type="button" class="btn btn-outline-secondary mb-3" (click)="loadCouriers()">Újrapróbálás</button>
+      } @else if (couriers().length === 0) {
+        <p role="status">Nincs elérhető aktív futár.</p>
+      } @else {
+        <div class="action-row mb-4">
+          <div class="courier-select">
+            <label class="form-label" for="courier-assignment">Futár</label>
+            <select id="courier-assignment" class="form-select" [formControl]="courierId">
+              <option [ngValue]="null">Válassz futárt</option>
+              @for (courier of couriers(); track courier.id) { <option [ngValue]="courier.id">{{ courier.fullName }} (#{{ courier.id }})</option> }
+            </select>
+          </div>
+          <button type="button" class="action-button" [disabled]="busy() || courierId.invalid" (click)="assignCourier()">Futár hozzárendelése</button>
+        </div>
+      }
+    }
+    @if (nextStatuses().length) {
+      <label class="form-label" for="status-description">Esemény leírása (opcionális)</label>
+      <textarea id="status-description" class="form-control mb-3" rows="2" maxlength="500" [formControl]="description"></textarea>
+      @if (description.invalid) { <p class="error-message">A leírás legfeljebb 500 karakter lehet.</p> }
+      <div class="action-row">
+        @for (status of nextStatuses(); track status) {
+          <button type="button" class="action-button" [class.cancel-button]="status === 'CANCELLED'"
+                  [disabled]="busy() || description.invalid" (click)="updateStatus(status)">{{ actionLabels[status] }}</button>
+        }
+      </div>
+    }
+    @if (busy()) { <p class="mt-3 mb-0" role="status">Módosítás mentése…</p> }
+  </section>
+}
