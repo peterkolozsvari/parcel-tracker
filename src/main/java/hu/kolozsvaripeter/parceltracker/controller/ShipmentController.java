@@ -1,6 +1,7 @@
 package hu.kolozsvaripeter.parceltracker.controller;
 
 import hu.kolozsvaripeter.parceltracker.dto.incoming.CreateShipmentDto;
+import hu.kolozsvaripeter.parceltracker.dto.incoming.AssignCourierDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.CreateShipmentResponseDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentDetailsDto;
 import hu.kolozsvaripeter.parceltracker.dto.outgoing.ShipmentListItemDto;
@@ -38,6 +39,14 @@ public class ShipmentController {
         CreateShipmentResponseDto response =
                 shipmentService.createShipment(command);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}/courier")
+    public ResponseEntity<Void> assignCourier(@PathVariable Long id,
+                                             @RequestBody @Valid AssignCourierDto command,
+                                             Principal principal) {
+        shipmentService.assignCourier(id, command, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
