@@ -78,6 +78,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, status);
     }
 
+    @ExceptionHandler(ShipmentStateConflictException.class)
+    public ResponseEntity<ApiError> handleShipmentStateConflictException(ShipmentStateConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiError("SHIPMENT_STATE_CONFLICT", ex.getMessage(), null));
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
