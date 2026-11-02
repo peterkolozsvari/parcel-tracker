@@ -1,5 +1,5 @@
 <main class="container py-5">
-  <a class="back-link" routerLink="/my-shipments">← Vissza a küldeményeimhez</a>
+  <a class="back-link" [routerLink]="listRoute()">← Vissza a küldeménylistához</a>
   <h1>Küldemény részletei</h1>
 
   @if (loading()) {
@@ -23,6 +23,8 @@
         <div><dt>Utolsó módosítás</dt><dd>{{ item.updatedAt | date:'yyyy.MM.dd. HH:mm' }}</dd></div>
       </dl>
     </section>
+
+    <app-shipment-actions [shipment]="item" (shipmentUpdated)="retry()" />
 
     <section class="detail-card history-section" aria-labelledby="history-heading" [attr.aria-busy]="historyLoading()">
       <h2 id="history-heading">Státusztörténet</h2>
