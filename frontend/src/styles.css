@@ -12,9 +12,78 @@
   --accent: #007f82;
   --accent-hover: #006568;
   --on-accent: #fff;
+  --danger-text: #b42318;
+  --danger-bg: #fff1f0;
+  --positive-bg: #e8f5ec;
+  --positive-text: #23653a;
+  --negative-bg: #fff0ee;
+  --negative-text: #a12b20;
+  --auth-bg: linear-gradient(135deg, #27c3c5 0%, #137f87 100%);
+  --auth-field-solid: #328f94;
+  --auth-button-bg: linear-gradient(135deg, #0d9488 0%, #22d3c5 100%);
 }
 
 body {
   background-color: var(--page-bg);
   color: var(--text-primary);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page-bg: #10191f;
+  --header-bg: #18272f;
+  --text-primary: #e6f1f3;
+  --text-secondary: #c5d8dc;
+  --text-muted: #a8bdc3;
+  --border: #3a515c;
+  --surface-soft: #223740;
+  --surface-hover: #2d4852;
+  --accent: #63d7d3;
+  --accent-hover: #8ce9e5;
+  --on-accent: #092b31;
+  --danger-text: #ffb4ac;
+  --danger-bg: #49282d;
+  --positive-bg: #193e32;
+  --positive-text: #9fe2b7;
+  --negative-bg: #49282d;
+  --negative-text: #ffb4ac;
+  --auth-bg: linear-gradient(135deg, #10191f 0%, #17373c 100%);
+  --auth-field-solid: #25414b;
+  --auth-button-bg: linear-gradient(135deg, #006b6d 0%, #00787c 100%);
+
+  /* Bootstrap cards, tables, inputs and alerts follow the same palette. */
+  --bs-body-bg: var(--page-bg);
+  --bs-body-color: var(--text-primary);
+  --bs-secondary-color: var(--text-muted);
+  --bs-tertiary-bg: var(--surface-soft);
+  --bs-border-color: var(--border);
+  --bs-emphasis-color: var(--text-primary);
+  --bs-heading-color: var(--text-primary);
+  --bs-link-color: var(--accent);
+  --bs-link-hover-color: var(--accent-hover);
+}
+
+:root[data-theme="dark"] .card { --bs-card-bg: var(--header-bg); }
+:root[data-theme="dark"] .btn-primary {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-color: var(--on-accent);
+  --bs-btn-hover-bg: var(--accent-hover);
+  --bs-btn-hover-border-color: var(--accent-hover);
+  --bs-btn-hover-color: var(--on-accent);
+  --bs-btn-active-bg: var(--accent-hover);
+  --bs-btn-active-border-color: var(--accent-hover);
+  --bs-btn-active-color: var(--on-accent);
+  --bs-btn-disabled-bg: #3a656b;
+  --bs-btn-disabled-border-color: #3a656b;
+}
+:root[data-theme="dark"] .btn-outline-primary {
+  --bs-btn-color: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-hover-color: var(--on-accent);
+  --bs-btn-active-bg: var(--accent);
+  --bs-btn-active-border-color: var(--accent);
+  --bs-btn-active-color: var(--on-accent);
 }

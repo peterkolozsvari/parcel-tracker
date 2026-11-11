@@ -1,3 +1,4 @@
+import {ThemeService} from '../../services/theme.service';
 import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, ElementRef, inject, signal} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
@@ -19,6 +20,7 @@ import {AuthService} from '../../services/auth.service';
 })
 export class Navbar {
 
+  protected readonly themeService = inject(ThemeService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly languageService = inject(LanguageService);
 

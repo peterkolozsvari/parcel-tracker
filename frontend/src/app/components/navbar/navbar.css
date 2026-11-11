@@ -149,7 +149,7 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .navbar-content {
     flex-wrap: wrap;
     justify-content: space-between;
@@ -270,11 +270,27 @@ button:focus-visible {
 }
 
 .logout-item {
-  color: #b42318;
+  color: var(--danger-text);
 }
 
 .logout-item:hover,
 .logout-item:focus-visible {
-  background: #fff1f0;
-  color: #b42318;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
+
+.theme-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--accent);
+  cursor: pointer;
+}
+.theme-button:hover { background: var(--surface-hover); }

@@ -17,7 +17,7 @@ h1 { margin-bottom: .5rem; }
 .result-count { margin: 0; padding-bottom: .5rem; }
 .list-message { padding: 3rem 1.5rem; text-align: center; margin: 0; }
 .list-message h2 { font-size: 1.3rem; }
-.list-message .error-message { color: #b42318; }
+.list-message .error-message { color: var(--danger-text); }
 .table-scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 1.1rem 1.5rem; text-align: left; vertical-align: middle; }
@@ -26,8 +26,8 @@ td { border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
 tbody tr:last-child td { border-bottom: 0; }
 .tracking-number { font-weight: 700; color: var(--accent); }
 .status-badge { display: inline-block; padding: .35rem .65rem; border-radius: 999px; background: var(--surface-soft); color: var(--accent); font-size: .85rem; font-weight: 600; }
-.status-badge[data-status="DELIVERED"] { background: #e8f5ec; color: #23653a; }
-.status-badge[data-status="DELIVERY_FAILED"], .status-badge[data-status="CANCELLED"] { background: #fff0ee; color: #a12b20; }
+.status-badge[data-status="DELIVERED"] { background: var(--positive-bg); color: var(--positive-text); }
+.status-badge[data-status="DELIVERY_FAILED"], .status-badge[data-status="CANCELLED"] { background: var(--negative-bg); color: var(--negative-text); }
 .pagination-bar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: 1.25rem 1.5rem; border-top: 1px solid var(--border); }
 a:focus-visible, button:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 767px) {

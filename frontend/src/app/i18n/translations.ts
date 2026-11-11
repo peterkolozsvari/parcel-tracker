@@ -210,5 +210,7 @@ export const EN_TRANSLATIONS: Readonly<Record<string, string>> = {
   "Futár hozzárendelve a küldeményhez.": "A courier has been assigned to the shipment.",
   "Utca": "Street",
   "Jelszó megjelenítése": "Show password",
-  "Jelszó elrejtése": "Hide password"
+  "Jelszó elrejtése": "Hide password",
+  "Világos mód bekapcsolása": "Switch to light mode",
+  "Sötét mód bekapcsolása": "Switch to dark mode"
 };

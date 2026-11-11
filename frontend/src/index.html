@@ -3,6 +3,18 @@
 <head>
   <meta charset="utf-8">
   <title>Parcel Tracker</title>
+  <script>
+    // Apply the preference before Angular starts to avoid a bright first frame.
+    (function () {
+      var theme;
+      try { theme = localStorage.getItem('parcel-tracker.theme'); } catch (error) {}
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.bsTheme = theme;
+    })();
+  </script>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="/logo.png?v=2">

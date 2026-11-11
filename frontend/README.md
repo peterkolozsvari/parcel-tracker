@@ -21,3 +21,5 @@ Az `auth.service.ts` kezeli az aktuális felhasználó állapotát és a session
 A frontendtesztek nem helyettesítik a valódi böngészős és mobilos próbát. Teljes indítási, API- és tesztelési dokumentáció: [projekt README](../README.md).
 
 A HU/EN kapcsoló újratöltés nélkül vált nyelvet. A `language.service.ts` a választást localStorage-ban tárolja és frissíti a dokumentum `lang` attribútumát; a fordítások a `src/app/i18n/translations.ts` fájlban találhatók. A `translate` pipe kezeli a felületi címkéket és üzeneteket, a felhasználói adatok változatlanok maradnak.
+
+A fejléc nap/hold gombja a `theme.service.ts` segítségével vált világos és sötét megjelenés között. A kifejezett választást a `parcel-tracker.theme` localStorage-kulcs tárolja. Választás hiányában a rendszer `prefers-color-scheme` beállítása érvényesül, annak változásait is követve. A téma a dokumentum `data-theme` és Bootstrap `data-bs-theme` attribútumával jut el a CSS-hez; a közös színek a `src/styles.css` fájlban találhatók. Az `index.html` korai beállítása elkerüli a fehér kezdőképkockát sötét preferenciánál.

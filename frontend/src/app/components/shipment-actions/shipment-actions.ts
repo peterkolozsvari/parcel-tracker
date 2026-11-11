@@ -22,8 +22,8 @@ import {CourierListItem} from '../../models/user.model';
     .courier-select { flex: 1; min-width: min(100%, 240px); }
     .action-button { min-height: 44px; border: 1px solid var(--accent); border-radius: 8px; padding: .6rem 1rem; background: var(--accent); color: var(--on-accent); font-weight: 600; }
     .action-button:disabled { opacity: .5; }
-    .cancel-button { background: transparent; border-color: #a12b20; color: #a12b20; }
-    .error-message { color: #b42318; }
+    .cancel-button { background: transparent; border-color: var(--negative-text); color: var(--negative-text); }
+    .error-message { color: var(--danger-text); }
     button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
   `]
 })

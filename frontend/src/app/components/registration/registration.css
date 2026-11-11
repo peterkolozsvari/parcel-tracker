@@ -14,7 +14,7 @@
   justify-content: center;
   min-height: 100dvh;
   padding: 40px 20px;
-  background: linear-gradient(135deg, #27c3c5 0%, #137f87 100%);
+  background: var(--auth-bg);
   color: #fff;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.6;
@@ -109,7 +109,7 @@
 }
 
 .input-wrapper input:autofill {
-  background: #328f94;
+  background: var(--auth-field-solid);
   color: #fff;
 }
 
@@ -118,8 +118,8 @@
 .input-wrapper input:-webkit-autofill:focus {
   -webkit-text-fill-color: #fff;
   caret-color: #fff;
-  -webkit-box-shadow: 0 0 0 1000px #328f94 inset;
-  box-shadow: 0 0 0 1000px #328f94 inset;
+  -webkit-box-shadow: 0 0 0 1000px var(--auth-field-solid) inset;
+  box-shadow: 0 0 0 1000px var(--auth-field-solid) inset;
 }
 
 .input-wrapper input:autofill + label {
@@ -184,7 +184,7 @@
   padding: 15px 24px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0d9488 0%, #22d3c5 100%);
+  background: var(--auth-button-bg);
   box-shadow: 0 4px 15px rgba(0, 100, 105, 0.3);
   color: #fff;
   font: inherit;
