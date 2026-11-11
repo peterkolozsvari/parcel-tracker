@@ -4,5 +4,5 @@
   [class.error]="type() === 'error'"
   [attr.role]="type() === 'error' ? 'alert' : 'status'"
 >
-  {{ message() }}
+  {{ (message()) | translate }}
 </div>

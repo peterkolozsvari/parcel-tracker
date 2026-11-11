@@ -1,3 +1,4 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
@@ -12,7 +13,7 @@ type EditableUser = UserDetails & {draftRole: Role; draftActive: boolean};
 
 @Component({
   selector: 'app-user-management',
-  imports: [FormsModule],
+  imports: [TranslatePipe, FormsModule],
   templateUrl: './user-management.html',
   styleUrl: './user-management.css'
 })

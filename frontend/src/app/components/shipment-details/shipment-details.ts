@@ -1,3 +1,5 @@
+import {LanguageService} from '../../services/language.service';
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, computed, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
@@ -11,11 +13,12 @@ import {ShipmentActions} from '../shipment-actions/shipment-actions';
 
 @Component({
   selector: 'app-shipment-details',
-  imports: [DatePipe, DecimalPipe, RouterLink, ShipmentActions],
+  imports: [TranslatePipe, DatePipe, DecimalPipe, RouterLink, ShipmentActions],
   templateUrl: './shipment-details.html',
   styleUrl: './shipment-details.css'
 })
 export class ShipmentDetails implements OnInit {
+  private readonly language = inject(LanguageService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly shipmentService = inject(ShipmentService);
@@ -111,7 +114,17 @@ export class ShipmentDetails implements OnInit {
   }
 
   eventDescription(event: TrackingEvent): string | null {
-    return event.description === 'Shipment registered' ? 'Küldemény rögzítve.' : event.description;
+    const defaults: Record<string, string> = {
+      REGISTERED: 'Küldemény rögzítve.',
+      COURIER_ASSIGNED: 'Futár hozzárendelve a küldeményhez.',
+      PICKED_UP: 'A futár felvette a küldeményt.',
+      IN_TRANSIT: 'A küldemény szállítás alatt van.',
+      DELIVERED: 'A küldeményt kézbesítettük.',
+      DELIVERY_FAILED: 'A kézbesítés sikertelen volt.',
+      CANCELLED: 'A küldeményt töröltük.'
+    };
+    const description = event.description === 'Shipment registered' ? defaults['REGISTERED'] : event.description;
+    return description === defaults[event.status] ? this.language.translate(description) : description;
   }
 
   retry(): void {

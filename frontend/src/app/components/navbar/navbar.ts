@@ -1,3 +1,4 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, ElementRef, inject, signal} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {LanguageService} from '../../services/language.service';
@@ -5,7 +6,7 @@ import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [
+  imports: [TranslatePipe,
     RouterLink,
     RouterLinkActive
   ],

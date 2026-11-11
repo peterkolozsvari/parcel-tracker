@@ -1,42 +1,42 @@
 <main class="container py-5">
-  <h1>Felhasználókezelés</h1>
-  <p>A szerepkör módosítása után az érintett felhasználónak újra be kell jelentkeznie.</p>
+  <h1>{{ 'Felhasználókezelés' | translate }}</h1>
+  <p>{{ 'A szerepkör módosítása után az érintett felhasználónak újra be kell jelentkeznie.' | translate }}</p>
   <div class="filters">
-    <label>Szerepkör
+    <label>{{ 'Szerepkör' | translate }}
       <select class="form-select" [(ngModel)]="role" (ngModelChange)="load()" [disabled]="loading() || savingId() !== null">
-        <option value="">Mindegyik</option>
-        @for (item of roles; track item) { <option [value]="item">{{ roleLabels[item] }}</option> }
+        <option value="">{{ 'Mindegyik' | translate }}</option>
+        @for (item of roles; track item) { <option [value]="item">{{ (roleLabels[item]) | translate }}</option> }
       </select>
     </label>
-    <label>Állapot
+    <label>{{ 'Állapot' | translate }}
       <select class="form-select" [(ngModel)]="active" (ngModelChange)="load()" [disabled]="loading() || savingId() !== null">
-        <option value="">Mindegyik</option><option value="true">Aktív</option><option value="false">Inaktív</option>
+        <option value="">{{ 'Mindegyik' | translate }}</option><option value="true">{{ 'Aktív' | translate }}</option><option value="false">{{ 'Inaktív' | translate }}</option>
       </select>
     </label>
-    <button type="button" class="btn action" (click)="load(page()?.number ?? 0)" [disabled]="loading() || savingId() !== null">Frissítés</button>
+    <button type="button" class="btn action" (click)="load(page()?.number ?? 0)" [disabled]="loading() || savingId() !== null">{{ 'Frissítés' | translate }}</button>
   </div>
-  @if (error()) { <p class="alert alert-danger" role="alert">{{ error() }}</p> }
-  @if (success()) { <p class="alert alert-success" role="status">{{ success() }}</p> }
-  @if (loading()) { <p role="status">Felhasználók betöltése…</p> }
+  @if (error()) { <p class="alert alert-danger" role="alert">{{ (error()) | translate }}</p> }
+  @if (success()) { <p class="alert alert-success" role="status">{{ (success()) | translate }}</p> }
+  @if (loading()) { <p role="status">{{ 'Felhasználók betöltése…' | translate }}</p> }
   @else if (page(); as result) {
-    @if (users().length === 0) { <p>Nincs a szűrésnek megfelelő felhasználó.</p> }
+    @if (users().length === 0) { <p>{{ 'Nincs a szűrésnek megfelelő felhasználó.' | translate }}</p> }
     @else {
       <div class="table-responsive">
         <table class="table align-middle">
-          <thead><tr><th>Név</th><th>Email-cím</th><th>Telefonszám</th><th>Szerepkör</th><th>Állapot</th><th>Művelet</th></tr></thead>
+          <thead><tr><th>{{ 'Név' | translate }}</th><th>{{ 'Email-cím' | translate }}</th><th>{{ 'Telefonszám' | translate }}</th><th>{{ 'Szerepkör' | translate }}</th><th>{{ 'Állapot' | translate }}</th><th>{{ 'Művelet' | translate }}</th></tr></thead>
           <tbody>
             @for (user of users(); track user.id) {
               <tr>
-                <td>{{ user.fullName }} @if (isSelf(user)) { <small>(saját fiók)</small> }</td>
+                <td>{{ user.fullName }} @if (isSelf(user)) { <small>{{ '(saját fiók)' | translate }}</small> }</td>
                 <td>{{ user.email }}</td><td>{{ user.phoneNumber || '–' }}</td>
-                <td><select class="form-select" [(ngModel)]="user.draftRole" [attr.aria-label]="user.fullName + ' szerepköre'"
+                <td><select class="form-select" [(ngModel)]="user.draftRole" [attr.aria-label]="user.fullName + ' ' + ('Szerepkör' | translate)"
                             [disabled]="isSelf(user) || savingId() !== null">
-                  @for (item of roles; track item) { <option [value]="item">{{ roleLabels[item] }}</option> }
+                  @for (item of roles; track item) { <option [value]="item">{{ (roleLabels[item]) | translate }}</option> }
                 </select></td>
-                <td><label><input type="checkbox" [(ngModel)]="user.draftActive" [disabled]="isSelf(user) || savingId() !== null"> Aktív</label></td>
+                <td><label><input type="checkbox" [(ngModel)]="user.draftActive" [disabled]="isSelf(user) || savingId() !== null"> {{ 'Aktív' | translate }}</label></td>
                 <td><button type="button" class="btn action" (click)="save(user)"
                             [disabled]="isSelf(user) || savingId() !== null || (user.role === user.draftRole && user.active === user.draftActive)">
-                  {{ savingId() === user.id ? 'Mentés…' : 'Mentés' }}
+                  {{ (savingId() === user.id ? 'Mentés…' : 'Mentés') | translate }}
                 </button></td>
               </tr>
             }
@@ -44,12 +44,12 @@
         </table>
       </div>
     }
-    <nav class="pagination-controls" aria-label="Felhasználók lapozása">
+    <nav class="pagination-controls" [attr.aria-label]="'Felhasználók lapozása' | translate">
       <button type="button" class="btn btn-outline-secondary" (click)="load(result.number - 1)"
-              [disabled]="result.number === 0 || savingId() !== null">Előző</button>
-      <span>{{ result.totalPages ? result.number + 1 : 0 }} / {{ result.totalPages }} oldal · {{ result.totalElements }} felhasználó</span>
+              [disabled]="result.number === 0 || savingId() !== null">{{ 'Előző' | translate }}</button>
+      <span>{{ result.totalPages ? result.number + 1 : 0 }} / {{ result.totalPages }} {{ 'oldal' | translate }} · {{ result.totalElements }} {{ 'felhasználó' | translate }}</span>
       <button type="button" class="btn btn-outline-secondary" (click)="load(result.number + 1)"
-              [disabled]="result.number + 1 >= result.totalPages || savingId() !== null">Következő</button>
+              [disabled]="result.number + 1 >= result.totalPages || savingId() !== null">{{ 'Következő' | translate }}</button>
     </nav>
   }
 </main>

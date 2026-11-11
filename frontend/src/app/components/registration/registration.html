@@ -1,8 +1,8 @@
 <div class="registration-page">
   <div class="registration-card">
     <div class="registration-header">
-      <h1>Hozd létre a fiókod!</h1>
-      <p>Regisztrálj, és kezeld egy helyen a csomagjaidat.</p>
+      <h1>{{ 'Hozd létre a fiókod!' | translate }}</h1>
+      <p>{{ 'Regisztrálj, és kezeld egy helyen a csomagjaidat.' | translate }}</p>
     </div>
 
     <form
@@ -23,17 +23,17 @@
             placeholder=" "
             aria-describedby="fullName-error"
           >
-          <label for="fullName">Teljes név</label>
+          <label for="fullName">{{ 'Teljes név' | translate }}</label>
         </div>
 
         @if (registrationForm.controls.fullName.touched) {
           @if (registrationForm.controls.fullName.hasError('required')) {
             <p class="field-error" id="fullName-error" role="alert">
-              Add meg a teljes neved!
+              {{ 'Add meg a teljes neved!' | translate }}
             </p>
           } @else if (registrationForm.controls.fullName.hasError('maxlength')) {
             <p class="field-error" id="fullName-error" role="alert">
-              A név legfeljebb 100 karakter lehet.
+              {{ 'A név legfeljebb 100 karakter lehet.' | translate }}
             </p>
           }
         }
@@ -54,21 +54,21 @@
             placeholder=" "
             aria-describedby="email-error"
           >
-          <label for="email">Email-cím</label>
+          <label for="email">{{ 'Email-cím' | translate }}</label>
         </div>
 
         @if (registrationForm.controls.email.touched) {
           @if (registrationForm.controls.email.hasError('required')) {
             <p class="field-error" id="email-error" role="alert">
-              Add meg az email-címed!
+              {{ 'Add meg az email-címed!' | translate }}
             </p>
           } @else if (registrationForm.controls.email.hasError('email')) {
             <p class="field-error" id="email-error" role="alert">
-              Adj meg egy érvényes email-címet!
+              {{ 'Adj meg egy érvényes email-címet!' | translate }}
             </p>
           } @else if (registrationForm.controls.email.hasError('maxlength')) {
             <p class="field-error" id="email-error" role="alert">
-              Az email-cím legfeljebb 255 karakter lehet.
+              {{ 'Az email-cím legfeljebb 255 karakter lehet.' | translate }}
             </p>
           }
         }
@@ -89,14 +89,14 @@
             placeholder=" "
             aria-describedby="password-help password-error"
           >
-          <label for="password">Jelszó</label>
+          <label for="password">{{ 'Jelszó' | translate }}</label>
 
           <button
             type="button"
             class="password-toggle"
-            [attr.aria-label]="passwordInput.type === 'password'
+            [attr.aria-label]="(passwordInput.type === 'password'
               ? 'Jelszó megjelenítése'
-              : 'Jelszó elrejtése'"
+              : 'Jelszó elrejtése') | translate"
             [attr.aria-pressed]="passwordInput.type === 'text'"
             (click)="passwordInput.type = passwordInput.type === 'password'
               ? 'text'
@@ -120,21 +120,21 @@
         </div>
 
         <p class="field-hint" id="password-help">
-          A jelszó 8–72 karakter hosszú legyen.
+          {{ 'A jelszó 8–72 karakter hosszú legyen.' | translate }}
         </p>
 
         @if (registrationForm.controls.password.touched) {
           @if (registrationForm.controls.password.hasError('required')) {
             <p class="field-error" id="password-error" role="alert">
-              Adj meg egy jelszót!
+              {{ 'Adj meg egy jelszót!' | translate }}
             </p>
           } @else if (registrationForm.controls.password.hasError('minlength')) {
             <p class="field-error" id="password-error" role="alert">
-              A jelszó legalább 8 karakter legyen.
+              {{ 'A jelszó legalább 8 karakter legyen.' | translate }}
             </p>
           } @else if (registrationForm.controls.password.hasError('maxlength')) {
             <p class="field-error" id="password-error" role="alert">
-              A jelszó legfeljebb 72 karakter lehet.
+              {{ 'A jelszó legfeljebb 72 karakter lehet.' | translate }}
             </p>
           }
         }
@@ -152,11 +152,11 @@
             placeholder=" "
             aria-describedby="phone-help phone-error"
           >
-          <label for="phoneNumber">Telefonszám</label>
+          <label for="phoneNumber">{{ 'Telefonszám' | translate }}</label>
         </div>
 
         <p class="field-hint" id="phone-help">
-          Nem kötelező megadni.
+          {{ 'Nem kötelező megadni.' | translate }}
         </p>
 
         @if (
@@ -164,22 +164,22 @@
           registrationForm.controls.phoneNumber.hasError('maxlength')
           ) {
           <p class="field-error" id="phone-error" role="alert">
-            A telefonszám legfeljebb 30 karakter lehet.
+            {{ 'A telefonszám legfeljebb 30 karakter lehet.' | translate }}
           </p>
         }
       </div>
 
       @if (errorMessage) {
-        <p class="field-error" role="alert">{{ errorMessage }}</p>
+        <p class="field-error" role="alert">{{ (errorMessage) | translate }}</p>
       }
       <button type="submit" class="registration-button">
-        Regisztráció
+        {{ 'Regisztráció' | translate }}
       </button>
     </form>
 
     <p class="login-link">
-      Már van fiókod?
-      <a routerLink="/login">Jelentkezz be!</a>
+      {{ 'Már van fiókod?' | translate }}
+      <a routerLink="/login">{{ 'Jelentkezz be!' | translate }}</a>
     </p>
   </div>
 </div>

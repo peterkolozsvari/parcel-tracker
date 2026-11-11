@@ -2,8 +2,8 @@
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <h2>Üdvözöljük a ParcelTracker felületén!</h2>
-        <p>Jelentkezz be a csomagjaid kezeléséhez</p>
+        <h2>{{ 'Üdvözöljük a ParcelTracker felületén!' | translate }}</h2>
+        <p>{{ 'Jelentkezz be a csomagjaid kezeléséhez' | translate }}</p>
       </div>
 
       <form
@@ -27,18 +27,18 @@
               aria-describedby="email-error"
               [attr.aria-invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid"
             >
-            <label for="email">Email-cím</label>
+            <label for="email">{{ 'Email-cím' | translate }}</label>
             <span class="focus-border"></span>
           </div>
 
           @if (loginForm.controls.email.touched) {
             @if (loginForm.controls.email.hasError('required')) {
               <p id="email-error" role="alert">
-                Add meg az email-címed!
+                {{ 'Add meg az email-címed!' | translate }}
               </p>
             } @else if (loginForm.controls.email.hasError('email')) {
               <p id="email-error" role="alert">
-                Adj meg egy érvényes email-címet!
+                {{ 'Adj meg egy érvényes email-címet!' | translate }}
               </p>
             }
           }
@@ -58,12 +58,12 @@
               aria-describedby="password-error"
               [attr.aria-invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
             >
-            <label for="password">Jelszó</label>
+            <label for="password">{{ 'Jelszó' | translate }}</label>
 
             <button
               type="button"
               class="password-toggle"
-              [attr.aria-label]="passwordInput.type === 'password' ? 'Jelszó megjelenítése' : 'Jelszó elrejtése'"
+              [attr.aria-label]="(passwordInput.type === 'password' ? 'Jelszó megjelenítése' : 'Jelszó elrejtése') | translate"
               [attr.aria-pressed]="passwordInput.type === 'text'"
               (click)="passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'"
             >
@@ -91,7 +91,7 @@
             loginForm.controls.password.hasError('required')
             ) {
             <p id="password-error" role="alert">
-              Add meg a jelszavad!
+              {{ 'Add meg a jelszavad!' | translate }}
             </p>
           }
         </div>
@@ -101,7 +101,7 @@
             <input type="checkbox" id="remember" name="remember">
             <span class="checkbox-label">
               <span class="checkmark"></span>
-              Maradjak bejelentkezve
+              {{ 'Maradjak bejelentkezve' | translate }}
             </span>
           </label>
 
@@ -110,21 +110,21 @@
             class="forgot-password"
             (click)="$event.preventDefault()"
           >
-            Elfelejtetted a jelszavad?
+            {{ 'Elfelejtetted a jelszavad?' | translate }}
           </a>
         </div>
 
         @if (errorMessage) {
-          <p role="alert">{{ errorMessage }}</p>
+          <p role="alert">{{ (errorMessage) | translate }}</p>
         }
 
         <button type="submit" class="login-btn">
-          Bejelentkezés
+          {{ 'Bejelentkezés' | translate }}
         </button>
       </form>
 
       <div class="divider">
-        <span>vagy jelentkezz be ezzel</span>
+        <span>{{ 'vagy jelentkezz be ezzel' | translate }}</span>
       </div>
 
       <div class="social-login">
@@ -167,8 +167,8 @@
 
       <div class="signup-link">
         <p>
-          Még nincs fiókod?
-          <a routerLink="/registration">Regisztrálj!</a>
+          {{ 'Még nincs fiókod?' | translate }}
+          <a routerLink="/registration">{{ 'Regisztrálj!' | translate }}</a>
         </p>
       </div>
     </div>

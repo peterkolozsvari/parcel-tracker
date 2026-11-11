@@ -1,3 +1,4 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
@@ -6,7 +7,7 @@ import {UpdateUserProfile} from '../../models/user.model';
 
 @Component({
   selector: 'app-my-profile',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [TranslatePipe, ReactiveFormsModule, RouterLink],
   templateUrl: './my-profile.html',
   styleUrl: './my-profile.css',
 })

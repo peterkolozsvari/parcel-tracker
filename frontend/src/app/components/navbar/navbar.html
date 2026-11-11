@@ -1,5 +1,5 @@
 <header class="site-header">
-  <nav class="container navbar-content" aria-label="Fő navigáció">
+  <nav class="container navbar-content" [attr.aria-label]="'Fő navigáció' | translate">
     <a class="brand" routerLink="/home">
       <img class="brand-icon" src="/logo.png" alt="">
       <span class="brand-name">Parcel<span>Tracker</span></span>
@@ -8,7 +8,7 @@
     <button
       class="menu-toggle"
       type="button"
-      aria-label="Navigációs menü"
+      [attr.aria-label]="'Navigációs menü' | translate"
       aria-controls="navbar-menu"
       [attr.aria-expanded]="menuOpen()"
       (click)="toggleMenu()"
@@ -28,11 +28,11 @@
         routerLink="/shipments/new"
         routerLinkActive="is-active"
       >
-        Csomagfeladás
+        {{ 'Csomagfeladás' | translate }}
       </a>
 
       <div class="navbar-actions">
-        <div class="language-switch" role="group" aria-label="Nyelvválasztás">
+        <div class="language-switch" role="group" [attr.aria-label]="'Nyelvválasztás' | translate">
           <button
             type="button"
             class="language-button"
@@ -61,7 +61,7 @@
                 #profileToggle
                 type="button"
                 class="profile-button"
-                aria-label="Profilmenü"
+                [attr.aria-label]="'Profilmenü' | translate"
                 aria-controls="profile-dropdown"
                 [attr.aria-expanded]="profileMenuOpen()"
                 [title]="user.fullName"
@@ -99,7 +99,7 @@
                     (click)="closeProfileMenu()"
                     routerLink="/my-profile"
                   >
-                    Profilom
+                    {{ 'Profilom' | translate }}
                   </button>
 
                   <button
@@ -107,18 +107,18 @@
                     class="profile-menu-item"
                     routerLink="/my-shipments"
                     (click)="closeProfileMenu(); menuOpen.set(false)">
-                    Küldeményeim
+                    {{ 'Küldeményeim' | translate }}
                   </button>
 
                   @if (user.role === 'ADMIN') {
                     <button type="button" class="profile-menu-item" routerLink="/admin/users"
-                            (click)="closeProfileMenu(); menuOpen.set(false)">Felhasználókezelés</button>
+                            (click)="closeProfileMenu(); menuOpen.set(false)">{{ 'Felhasználókezelés' | translate }}</button>
                     <button type="button" class="profile-menu-item" routerLink="/admin/shipments"
-                            (click)="closeProfileMenu(); menuOpen.set(false)">Küldeménykezelés</button>
+                            (click)="closeProfileMenu(); menuOpen.set(false)">{{ 'Küldeménykezelés' | translate }}</button>
                   }
                   @if (user.role === 'COURIER') {
                     <button type="button" class="profile-menu-item" routerLink="/courier/shipments"
-                            (click)="closeProfileMenu(); menuOpen.set(false)">Futárfeladatok</button>
+                            (click)="closeProfileMenu(); menuOpen.set(false)">{{ 'Futárfeladatok' | translate }}</button>
                   }
 
                   <div class="profile-menu-divider"></div>
@@ -128,14 +128,14 @@
                     class="profile-menu-item logout-item"
                     (click)="logout()"
                   >
-                    Kijelentkezés
+                    {{ 'Kijelentkezés' | translate }}
                   </button>
                 </div>
               }
             </div>
           } @else {
             <a class="login-link" routerLink="/login">
-              {{ language() === 'hu' ? 'Bejelentkezés' : 'Sign in' }}
+              {{ (language() === 'hu' ? 'Bejelentkezés' : 'Sign in') | translate }}
             </a>
           }
         }

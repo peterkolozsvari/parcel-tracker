@@ -1,9 +1,10 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, inject, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-shipment-successfully-created',
-  imports: [
+  imports: [TranslatePipe,
     RouterLink
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

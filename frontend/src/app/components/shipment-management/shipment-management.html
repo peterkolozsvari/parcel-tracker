@@ -1,44 +1,44 @@
 <main class="container py-5">
   <div class="page-heading">
     <div>
-      <h1>{{ title }}</h1>
-      <p class="page-description">{{ isAdmin ? 'Összes küldemény. A követési számra kattintva futárt rendelhetsz hozzá vagy módosíthatod az állapotát.' : 'A hozzád rendelt küldemények. A követési számra kattintva láthatod a címeket és kezelheted a feladatot.' }}</p>
+      <h1>{{ (title) | translate }}</h1>
+      <p class="page-description">{{ (isAdmin ? 'Összes küldemény. A követési számra kattintva futárt rendelhetsz hozzá vagy módosíthatod az állapotát.' : 'A hozzád rendelt küldemények. A követési számra kattintva láthatod a címeket és kezelheted a feladatot.') | translate }}</p>
     </div>
   </div>
   <section class="shipments-panel" [attr.aria-busy]="loading()" [attr.aria-label]="title">
     <div class="list-toolbar">
       <div class="status-filter">
-        <label for="management-status">Státusz</label>
+        <label for="management-status">{{ 'Státusz' | translate }}</label>
         <select id="management-status" class="form-select" [value]="selectedStatus()" (change)="changeStatus($event)">
-          <option value="">Összes státusz</option>
-          @for (option of statusOptions; track option[0]) { <option [value]="option[0]">{{ option[1] }}</option> }
+          <option value="">{{ 'Összes státusz' | translate }}</option>
+          @for (option of statusOptions; track option[0]) { <option [value]="option[0]">{{ (option[1]) | translate }}</option> }
         </select>
       </div>
       @if (!loading() && !errorMessage() && shipments(); as page) {
-        <p class="result-count">Összesen {{ page.totalElements }} küldemény</p>
+        <p class="result-count">{{ 'Összesen' | translate }} {{ page.totalElements }} {{ 'küldemény' | translate }}</p>
       }
     </div>
     @if (loading()) {
-      <p class="list-message" role="status">Küldemények betöltése…</p>
+      <p class="list-message" role="status">{{ 'Küldemények betöltése…' | translate }}</p>
     } @else if (errorMessage()) {
-      <div class="list-message"><p role="alert">{{ errorMessage() }}</p>
-        <button type="button" class="secondary-button" (click)="loadShipments()">Újrapróbálás</button>
+      <div class="list-message"><p role="alert">{{ (errorMessage()) | translate }}</p>
+        <button type="button" class="secondary-button" (click)="loadShipments()">{{ 'Újrapróbálás' | translate }}</button>
       </div>
     } @else if (shipments(); as page) {
       @if (page.content.length === 0) {
-        <p class="list-message" role="status">{{ selectedStatus() ? 'Nincs a szűrésnek megfelelő küldemény.' : isAdmin ? 'Még nincs rögzített küldemény.' : 'Még nincs hozzád rendelt küldemény.' }}</p>
+        <p class="list-message" role="status">{{ (selectedStatus() ? 'Nincs a szűrésnek megfelelő küldemény.' : isAdmin ? 'Még nincs rögzített küldemény.' : 'Még nincs hozzád rendelt küldemény.') | translate }}</p>
       } @else {
         <div class="table-scroll">
           <table>
-            <caption class="visually-hidden">{{ title }}</caption>
-            <thead><tr><th scope="col">Követési szám</th><th scope="col">Címzett</th><th scope="col">Státusz</th><th scope="col">Feladás ideje</th></tr></thead>
+            <caption class="visually-hidden">{{ (title) | translate }}</caption>
+            <thead><tr><th scope="col">{{ 'Követési szám' | translate }}</th><th scope="col">{{ 'Címzett' | translate }}</th><th scope="col">{{ 'Státusz' | translate }}</th><th scope="col">{{ 'Feladás ideje' | translate }}</th></tr></thead>
             <tbody>
               @for (shipment of page.content; track shipment.id) {
                 <tr>
-                  <td class="tracking-number" data-label="Követési szám"><a [routerLink]="['/shipments', shipment.id]">{{ shipment.trackingNumber }}</a></td>
-                  <td data-label="Címzett">{{ shipment.receiverName }}</td>
-                  <td data-label="Státusz"><span class="status-badge" [attr.data-status]="shipment.status">{{ statusLabels[shipment.status] }}</span></td>
-                  <td data-label="Feladás ideje">{{ shipment.createdAt | date:'yyyy.MM.dd. HH:mm' }}</td>
+                  <td class="tracking-number" [attr.data-label]="'Követési szám' | translate"><a [routerLink]="['/shipments', shipment.id]">{{ shipment.trackingNumber }}</a></td>
+                  <td [attr.data-label]="'Címzett' | translate">{{ shipment.receiverName }}</td>
+                  <td [attr.data-label]="'Státusz' | translate"><span class="status-badge" [attr.data-status]="shipment.status">{{ (statusLabels[shipment.status]) | translate }}</span></td>
+                  <td [attr.data-label]="'Feladás ideje' | translate">{{ shipment.createdAt | date:'yyyy.MM.dd. HH:mm' }}</td>
                 </tr>
               }
             </tbody>
@@ -46,10 +46,10 @@
         </div>
       }
       @if (page.totalPages > 1) {
-        <nav class="pagination-bar" aria-label="Küldemények lapozása">
-          <button type="button" class="secondary-button" [disabled]="page.number === 0" (click)="loadShipments(page.number - 1)">Előző</button>
-          <span aria-live="polite">{{ page.number + 1 }} / {{ page.totalPages }}. oldal</span>
-          <button type="button" class="secondary-button" [disabled]="page.number + 1 >= page.totalPages" (click)="loadShipments(page.number + 1)">Következő</button>
+        <nav class="pagination-bar" [attr.aria-label]="'Küldemények lapozása' | translate">
+          <button type="button" class="secondary-button" [disabled]="page.number === 0" (click)="loadShipments(page.number - 1)">{{ 'Előző' | translate }}</button>
+          <span aria-live="polite">{{ page.number + 1 }} / {{ page.totalPages }} {{ 'oldal' | translate }}</span>
+          <button type="button" class="secondary-button" [disabled]="page.number + 1 >= page.totalPages" (click)="loadShipments(page.number + 1)">{{ 'Következő' | translate }}</button>
         </nav>
       }
     }
