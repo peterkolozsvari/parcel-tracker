@@ -1,14 +1,13 @@
 <div class="container py-5">
   <div class="card mx-auto text-center p-4" style="max-width: 600px;">
     <div class="card-body">
-      <h1 class="h3 mb-3">Sikeres küldeményrögzítés!</h1>
+      <h1 class="h3 mb-3">{{ 'Sikeres küldeményrögzítés!' | translate }}</h1>
 
       <p class="text-muted mb-4">
-        Küldeményedet rögzítettük a rendszerben.
-        Az alábbi követési számmal ellenőrizheted az állapotát.
+        {{ 'Küldeményedet rögzítettük a rendszerben. Az alábbi követési számmal ellenőrizheted az állapotát.' | translate }}
       </p>
 
-      <p class="mb-2">Követési szám:</p>
+      <p class="mb-2">{{ 'Követési szám:' | translate }}</p>
 
       <div class="border rounded p-3 mb-3">
         <span class="fs-4 fw-bold text-break">
@@ -21,8 +20,8 @@
         name="copy-outline"
         role="button"
         tabindex="0"
-        aria-label="Követési szám másolása"
-        title="Követési szám másolása"
+        [attr.aria-label]="'Követési szám másolása' | translate"
+        [title]="'Követési szám másolása' | translate"
         style="cursor: pointer; font-size: 24px;"
         (click)="copyTrackingNumber()"
         (keydown.enter)="copyTrackingNumber()"
@@ -30,14 +29,14 @@
       ></ion-icon>
 
       <p class="text-muted mb-4">
-        Őrizd meg a követési számot, és oszd meg a címzettel is.
+        {{ 'Őrizd meg a követési számot, és oszd meg a címzettel is.' | translate }}
       </p>
 
       <a
         routerLink="/shipments/new"
         class="btn btn-primary"
       >
-        Új küldemény feladása
+        {{ 'Új küldemény feladása' | translate }}
       </a>
     </div>
   </div>

@@ -1,8 +1,9 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, input} from '@angular/core';
 
 @Component({
   selector: 'app-feedback-message',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './feedback-message.html',
   styleUrl: './feedback-message.css',
 })

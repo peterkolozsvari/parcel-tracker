@@ -12,8 +12,8 @@
       </div>
 
       <div>
-        <h1 id="profile-title">Profilom</h1>
-        <p>Itt módosíthatod az adataidat és a mentett feladási címedet.</p>
+        <h1 id="profile-title">{{ 'Profilom' | translate }}</h1>
+        <p>{{ 'Itt módosíthatod az adataidat és a mentett feladási címedet.' | translate }}</p>
       </div>
     </header>
 
@@ -24,16 +24,16 @@
       novalidate
     >
       <fieldset class="profile-fields" [disabled]="isSaving">
-        <legend class="visually-hidden">Profiladatok szerkesztése</legend>
+        <legend class="visually-hidden">{{ 'Profiladatok szerkesztése' | translate }}</legend>
 
         <section class="form-section" aria-labelledby="personal-title">
           <div class="section-heading">
-            <h2 id="personal-title">Személyes adatok</h2>
+            <h2 id="personal-title">{{ 'Személyes adatok' | translate }}</h2>
           </div>
 
           <div class="form-grid">
             <div class="form-field full-width">
-              <label for="fullName">Teljes név</label>
+              <label for="fullName">{{ 'Teljes név' | translate }}</label>
               <input
                 id="fullName"
                 type="text"
@@ -49,13 +49,13 @@
                 profileForm.controls.fullName.invalid
                 ) {
                 <p class="field-error" id="fullName-error" role="alert">
-                  Adj meg egy érvényes nevet, legfeljebb 100 karakterrel!
+                  {{ 'Adj meg egy érvényes nevet, legfeljebb 100 karakterrel!' | translate }}
                 </p>
               }
             </div>
 
             <div class="form-field">
-              <label for="email">Email-cím</label>
+              <label for="email">{{ 'Email-cím' | translate }}</label>
               <input
                 id="email"
                 type="email"
@@ -65,14 +65,14 @@
                 aria-describedby="email-help"
               >
               <p class="field-hint" id="email-help">
-                Az email-címed ezen a felületen nem módosítható.
+                {{ 'Az email-címed ezen a felületen nem módosítható.' | translate }}
               </p>
             </div>
 
             <div class="form-field">
               <label for="phoneNumber">
-                Telefonszám
-                <span class="optional-label">opcionális</span>
+                {{ 'Telefonszám' | translate }}
+                <span class="optional-label">{{ 'opcionális' | translate }}</span>
               </label>
               <input
                 id="phoneNumber"
@@ -88,7 +88,7 @@
                 profileForm.controls.phoneNumber.invalid
                 ) {
                 <p class="field-error" id="phone-error" role="alert">
-                  Adj meg egy érvényes telefonszámot!
+                  {{ 'Adj meg egy érvényes telefonszámot!' | translate }}
                 </p>
               }
             </div>
@@ -101,16 +101,15 @@
           aria-labelledby="address-title"
         >
           <div class="section-heading">
-            <h2 id="address-title">Mentett feladási cím</h2>
+            <h2 id="address-title">{{ 'Mentett feladási cím' | translate }}</h2>
             <p>
-              Csomagfeladáskor ezt a címet használjuk alapértelmezetten.
-              Az adott küldeménynél másik címet is megadhatsz.
+              {{ 'Csomagfeladáskor ezt a címet használjuk alapértelmezetten. Az adott küldeménynél másik címet is megadhatsz.' | translate }}
             </p>
           </div>
 
           <div class="form-grid">
             <div class="form-field">
-              <label for="country">Ország</label>
+              <label for="country">{{ 'Ország' | translate }}</label>
               <input
                 id="country"
                 type="text"
@@ -120,7 +119,7 @@
             </div>
 
             <div class="form-field">
-              <label for="postalCode">Irányítószám</label>
+              <label for="postalCode">{{ 'Irányítószám' | translate }}</label>
               <input
                 id="postalCode"
                 type="text"
@@ -130,7 +129,7 @@
             </div>
 
             <div class="form-field full-width">
-              <label for="city">Település</label>
+              <label for="city">{{ 'Település' | translate }}</label>
               <input
                 id="city"
                 type="text"
@@ -140,7 +139,7 @@
             </div>
 
             <div class="form-field">
-              <label for="street">Közterület neve és jellege</label>
+              <label for="street">{{ 'Közterület neve és jellege' | translate }}</label>
               <input
                 id="street"
                 type="text"
@@ -149,7 +148,7 @@
             </div>
 
             <div class="form-field">
-              <label for="houseNumber">Házszám</label>
+              <label for="houseNumber">{{ 'Házszám' | translate }}</label>
               <input
                 id="houseNumber"
                 type="text"
@@ -159,8 +158,8 @@
 
             <div class="form-field full-width">
               <label for="door">
-                Emelet, ajtó
-                <span class="optional-label">opcionális</span>
+                {{ 'Emelet, ajtó' | translate }}
+                <span class="optional-label">{{ 'opcionális' | translate }}</span>
               </label>
               <input
                 id="door"
@@ -175,8 +174,7 @@
             profileForm.controls.address.invalid
             ) {
             <p class="field-error address-error" role="alert">
-              Ellenőrizd a címadatokat! A mentett címhez az ország,
-              irányítószám, település, közterület és házszám legyen kitöltve.
+              {{ 'Ellenőrizd a címadatokat! A mentett címhez az ország, irányítószám, település, közterület és házszám legyen kitöltve.' | translate }}
             </p>
           }
 
@@ -185,19 +183,19 @@
 
       @if (errorMessage()) {
         <p class="feedback feedback-error" role="alert">
-          {{ errorMessage() }}
+          {{ (errorMessage()) | translate }}
         </p>
       }
 
       @if (successMessage()) {
         <p class="feedback feedback-success" role="status">
-          {{ successMessage() }}
+          {{ (successMessage()) | translate }}
         </p>
       }
 
       <div class="form-actions">
         <a class="back-link" routerLink="/home">
-          Vissza a főoldalra
+          {{ 'Vissza a főoldalra' | translate }}
         </a>
 
         <button
@@ -207,9 +205,9 @@
         >
           @if (isSaving) {
             <span class="spinner" aria-hidden="true"></span>
-            Mentés folyamatban…
+            {{ 'Mentés folyamatban…' | translate }}
           } @else {
-            Módosítások mentése
+            {{ 'Módosítások mentése' | translate }}
           }
         </button>
       </div>

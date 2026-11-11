@@ -1,3 +1,4 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import {FormArray, FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ShipmentService} from '../../services/shipment.service';
@@ -8,7 +9,7 @@ import {CreateAddress} from '../../models/address.model';
 
 @Component({
   selector: 'app-create-shipment',
-  imports: [ReactiveFormsModule],
+  imports: [TranslatePipe, ReactiveFormsModule],
   templateUrl: './create-shipment.html',
   styleUrl: './create-shipment.css'
 })

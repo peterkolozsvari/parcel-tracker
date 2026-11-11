@@ -32,7 +32,7 @@ Ezeket a lépéseket a tényleges helyi alkalmazásban kell kipróbálni. A doku
 | Buildméret | Az ellenőrzött production build 500 kB-os kezdeti figyelmeztetési keretét kb. 40 kB-bal lépi túl. A login- és profil-CSS szintén figyelmeztetési keret fölött van. A build sikeres; a limiteket nem emeltük a figyelmeztetés elrejtéséért. |
 | Lapozási szerződés | A backend közvetlen `Page`-választ ad. A jelenlegi frontend ezt használja, de a Spring Data figyelmeztet a JSON-formátum hosszú távú stabilitására. Saját lapozott DTO-ra váltás külön kompatibilitási feladat. |
 | Képek | A `logo.png`, `home_pic.png` és `pagenotfound.png` nagy raszterképek. Méretezés/tömörítés és hálózati ellenőrzés még javíthat a betöltésen. |
-| Nyelvválasztás | A HU/EN kapcsoló nem teljes alkalmazásszintű fordítás; a felület túlnyomórészt magyar. |
+| Nyelvválasztás | A HU/EN kapcsoló futás közben váltja a felület szövegeit, a választást a böngésző tárolja. A felhasználói nevek, címadatok és egyedi leírások eredeti nyelvükön maradnak. |
 | Profil | Email- és jelszóváltoztatás, jelszó-visszaállítás, valamint mentett cím teljes törlése nincs elkészítve. |
 | Futárkezelés | Meglévő küldeményen futárcsere még nincs. Futár inaktiválása vagy szerepkörének elvétele előtt ellenőrizni kell a folyamatban lévő küldeményeit; az admin a megengedett státuszváltásokat továbbra is elvégezheti. |
 | Első admin | Regisztrációból mindig ügyfél lesz; első adminhoz fejlesztői adatbázis-beállítás kell. Nincs alapértelmezett adminjelszó. |

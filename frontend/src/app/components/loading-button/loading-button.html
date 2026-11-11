@@ -8,5 +8,5 @@
     <span class="spinner" aria-hidden="true"></span>
   }
 
-  {{ loading() ? loadingLabel() : label() }}
+  {{ (loading() ? loadingLabel() : label()) | translate }}
 </button>

@@ -1,3 +1,4 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
@@ -9,7 +10,7 @@ import {PageResponse} from '../../models/page-response.model';
 
 @Component({
   selector: 'app-shipment-management',
-  imports: [DatePipe, RouterLink],
+  imports: [TranslatePipe, DatePipe, RouterLink],
   templateUrl: './shipment-management.html',
   styleUrl: '../my-shipments/my-shipments.css'
 })

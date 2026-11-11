@@ -1,13 +1,13 @@
 <div class="container py-5">
-  <h1 class="mb-4">Küldemény feladása</h1>
+  <h1 class="mb-4">{{ 'Küldemény feladása' | translate }}</h1>
 
   <form [formGroup]="shipmentForm" (ngSubmit)="submit()">
     <section class="card mb-4">
       <div class="card-body">
-        <h2 class="h4 mb-3">Címzett</h2>
+        <h2 class="h4 mb-3">{{ 'Címzett' | translate }}</h2>
 
         <label for="receiverName" class="form-label">
-          Címzett neve
+          {{ 'Címzett neve' | translate }}
         </label>
 
         <input
@@ -21,7 +21,7 @@
 
         @if (isInvalid('receiverName')) {
           <div class="invalid-feedback">
-            Add meg a címzett nevét
+            {{ 'Add meg a címzett nevét' | translate }}
           </div>
         }
       </div>
@@ -30,18 +30,18 @@
     @for (section of addressSections; track section.name) {
       <section class="card mb-4" [formGroupName]="section.name">
         <div class="card-body">
-          <h2 class="h4 mb-3">{{ section.title }}</h2>
+          <h2 class="h4 mb-3">{{ (section.title) | translate }}</h2>
 
           @if (section.name === 'pickupAddress' && isProfileLoading()) {
-            <p class="mb-0" role="status">Mentett cím betöltése…</p>
+            <p class="mb-0" role="status">{{ 'Mentett cím betöltése…' | translate }}</p>
           } @else if (section.name === 'pickupAddress' && profileLoadError()) {
-            <div class="alert alert-danger" role="alert">{{ profileLoadError() }}</div>
+            <div class="alert alert-danger" role="alert">{{ (profileLoadError()) | translate }}</div>
             <button type="button" class="btn btn-outline-primary" (click)="loadUserProfile()">
-              Újrapróbálás
+              {{ 'Újrapróbálás' | translate }}
             </button>
           } @else if (section.name === 'pickupAddress' && !editingPickupAddress()) {
             @if (savedPickupAddress(); as address) {
-              <p class="text-muted">A profilodban mentett feladási címet használjuk.</p>
+              <p class="text-muted">{{ 'A profilodban mentett feladási címet használjuk.' | translate }}</p>
               <address class="mb-3">
                 {{ address.country }}<br>
                 {{ address.postalCode }} {{ address.city }}<br>
@@ -52,18 +52,18 @@
               </address>
               <button type="button" class="btn btn-outline-primary"
                       (click)="editingPickupAddress.set(true)">
-                Másik felvételi cím megadása
+                {{ 'Másik felvételi cím megadása' | translate }}
               </button>
             }
           } @else {
           @if (section.name === 'pickupAddress') {
             <p class="text-muted">
-              Az itt megadott cím csak ehhez a küldeményhez tartozik.
+              {{ 'Az itt megadott cím csak ehhez a küldeményhez tartozik.' | translate }}
             </p>
             @if (savedPickupAddress()) {
               <button type="button" class="btn btn-outline-secondary mb-3"
                       (click)="useSavedPickupAddress()">
-                Mentett cím használata
+                {{ 'Mentett cím használata' | translate }}
               </button>
             }
           }
@@ -74,7 +74,7 @@
                   [for]="section.name + '-' + field.name"
                   class="form-label"
                 >
-                  {{ field.label }}
+                  {{ (field.label) | translate }}
                 </label>
 
                 <input
@@ -90,7 +90,7 @@
 
                 @if (isInvalid(section.name + '.' + field.name)) {
                   <div class="invalid-feedback">
-                    Töltsd ki a mezőt
+                    {{ 'Töltsd ki a mezőt' | translate }}
                   </div>
                 }
               </div>
@@ -103,13 +103,13 @@
 
     <section class="card mb-4">
       <div class="card-body">
-        <h2 class="h4 mb-3">Csomagok</h2>
+        <h2 class="h4 mb-3">{{ 'Csomagok' | translate }}</h2>
 
         <div formArrayName="parcels">
           @for (parcel of parcels.controls; track parcel; let i = $index) {
             <div class="border rounded p-3 mb-3" [formGroupName]="i">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="h5 mb-0">{{ i + 1 }}. csomag</h3>
+                <h3 class="h5 mb-0">{{ i + 1 }} {{ 'csomag' | translate }}</h3>
 
                 <button
                   type="button"
@@ -117,13 +117,13 @@
                   [disabled]="parcels.length === 1"
                   (click)="removeParcel(i)"
                 >
-                  Eltávolítás
+                  {{ 'Eltávolítás' | translate }}
                 </button>
               </div>
 
               <div class="mb-3">
                 <label [for]="'weight-' + i" class="form-label">
-                  Súly (kg)
+                  {{ 'Súly (kg)' | translate }}
                 </label>
 
                 <input
@@ -139,11 +139,11 @@
                 @if (isInvalid('parcels.' + i + '.weight')) {
                   <div class="invalid-feedback">
                     @if (parcel.get('weight')?.hasError('required')) {
-                      A súly megadása kötelező.
+                      {{ 'A súly megadása kötelező.' | translate }}
                     } @else if (parcel.get('weight')?.hasError('min')) {
-                      A súly legalább 0,01 kg legyen.
+                      {{ 'A súly legalább 0,01 kg legyen.' | translate }}
                     } @else if (parcel.get('weight')?.hasError('pattern')) {
-                      Legfeljebb két tizedesjegyet adj meg.
+                      {{ 'Legfeljebb két tizedesjegyet adj meg.' | translate }}
                     }
                   </div>
                 }
@@ -151,7 +151,7 @@
 
               <div class="mb-3">
                 <label [for]="'description-' + i" class="form-label">
-                  Leírás
+                  {{ 'Leírás' | translate }}
                 </label>
 
                 <textarea
@@ -171,7 +171,7 @@
                 >
 
                 <label [for]="'fragile-' + i" class="form-check-label">
-                  Törékeny
+                  {{ 'Törékeny' | translate }}
                 </label>
               </div>
             </div>
@@ -183,19 +183,19 @@
           class="btn btn-outline-primary"
           (click)="addParcel()"
         >
-          + Új csomag
+          {{ '+ Új csomag' | translate }}
         </button>
       </div>
     </section>
 
     @if (errorMessage()) {
-      <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+      <div class="alert alert-danger" role="alert">{{ (errorMessage()) | translate }}</div>
     }
 
     <button type="submit"
             class="btn btn-primary btn-lg"
             [disabled]="isProfileLoading() || !!profileLoadError() || isSubmitting()">
-      {{ isSubmitting() ? 'Feladás folyamatban…' : 'Küldemény feladása' }}
+      {{ (isSubmitting() ? 'Feladás folyamatban…' : 'Küldemény feladása') | translate }}
     </button>
   </form>
 </div>

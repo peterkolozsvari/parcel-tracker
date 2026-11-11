@@ -1,53 +1,53 @@
 <main class="container py-5">
-  <a class="back-link" [routerLink]="listRoute()">← Vissza a küldeménylistához</a>
-  <h1>Küldemény részletei</h1>
+  <a class="back-link" [routerLink]="listRoute()">{{ '← Vissza a küldeménylistához' | translate }}</a>
+  <h1>{{ 'Küldemény részletei' | translate }}</h1>
 
   @if (loading()) {
-    <p class="state-panel" role="status">Küldemény betöltése…</p>
+    <p class="state-panel" role="status">{{ 'Küldemény betöltése…' | translate }}</p>
   } @else if (errorMessage()) {
     <div class="state-panel" role="alert">
-      <p>{{ errorMessage() }}</p>
+      <p>{{ (errorMessage()) | translate }}</p>
       @if (canRetry()) {
-        <button type="button" class="btn btn-outline-secondary" (click)="retry()">Újrapróbálás</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="retry()">{{ 'Újrapróbálás' | translate }}</button>
       }
     </div>
   } @else if (shipment(); as item) {
-    <section class="summary-panel" aria-label="Küldemény adatai">
+    <section class="summary-panel" [attr.aria-label]="'Küldemény adatai' | translate">
       <div>
-        <span class="field-label">Követési szám</span>
+        <span class="field-label">{{ 'Követési szám' | translate }}</span>
         <p class="tracking-number">{{ item.trackingNumber }}</p>
-        <span class="status-badge" [attr.data-status]="item.status">{{ statusLabels[item.status] }}</span>
+        <span class="status-badge" [attr.data-status]="item.status">{{ (statusLabels[item.status]) | translate }}</span>
       </div>
       <dl class="summary-dates">
         @if (item.courier; as courier) {
-          <div><dt>Hozzárendelt futár</dt><dd>{{ courier.fullName }}</dd></div>
+          <div><dt>{{ 'Hozzárendelt futár' | translate }}</dt><dd>{{ courier.fullName }}</dd></div>
         }
-        <div><dt>Feladás ideje</dt><dd>{{ item.createdAt | date:'yyyy.MM.dd. HH:mm' }}</dd></div>
-        <div><dt>Utolsó módosítás</dt><dd>{{ item.updatedAt | date:'yyyy.MM.dd. HH:mm' }}</dd></div>
+        <div><dt>{{ 'Feladás ideje' | translate }}</dt><dd>{{ item.createdAt | date:'yyyy.MM.dd. HH:mm' }}</dd></div>
+        <div><dt>{{ 'Utolsó módosítás' | translate }}</dt><dd>{{ item.updatedAt | date:'yyyy.MM.dd. HH:mm' }}</dd></div>
       </dl>
     </section>
 
     <app-shipment-actions [shipment]="item" (shipmentUpdated)="retry()" />
 
     <section class="detail-card history-section" aria-labelledby="history-heading" [attr.aria-busy]="historyLoading()">
-      <h2 id="history-heading">Státusztörténet</h2>
+      <h2 id="history-heading">{{ 'Státusztörténet' | translate }}</h2>
       @if (historyLoading()) {
-        <p role="status">Státusztörténet betöltése…</p>
+        <p role="status">{{ 'Státusztörténet betöltése…' | translate }}</p>
       } @else if (historyError()) {
-        <p class="history-error" role="alert">{{ historyError() }}</p>
-        <button type="button" class="btn btn-outline-secondary" (click)="loadTrackingEvents()">Újrapróbálás</button>
+        <p class="history-error" role="alert">{{ (historyError()) | translate }}</p>
+        <button type="button" class="btn btn-outline-secondary" (click)="loadTrackingEvents()">{{ 'Újrapróbálás' | translate }}</button>
       } @else {
         <ol class="timeline">
           @for (event of trackingEvents(); track event.id) {
             <li>
-              <h3>{{ statusLabels[event.status] }}</h3>
+              <h3>{{ (statusLabels[event.status]) | translate }}</h3>
               <time [attr.datetime]="event.occurredAt">{{ event.occurredAt | date:'yyyy.MM.dd. HH:mm' }}</time>
               @if (eventDescription(event); as description) {
                 <p>{{ description }}</p>
               }
             </li>
           } @empty {
-            <li class="empty-history">Még nincs rögzített esemény ehhez a küldeményhez.</li>
+            <li class="empty-history">{{ 'Még nincs rögzített esemény ehhez a küldeményhez.' | translate }}</li>
           }
         </ol>
       }
@@ -55,7 +55,7 @@
 
     <div class="details-grid">
       <section class="detail-card">
-        <h2>Feladó és felvételi cím</h2>
+        <h2>{{ 'Feladó és felvételi cím' | translate }}</h2>
         <p class="person-name">{{ item.sender.fullName }}</p>
         <address>
           {{ item.pickupAddress.country }}<br>
@@ -65,7 +65,7 @@
         </address>
       </section>
       <section class="detail-card">
-        <h2>Címzett és kézbesítési cím</h2>
+        <h2>{{ 'Címzett és kézbesítési cím' | translate }}</h2>
         <p class="person-name">{{ item.receiverName }}</p>
         <address>
           {{ item.deliveryAddress.country }}<br>
@@ -77,19 +77,19 @@
     </div>
 
     <section class="detail-card parcels-section">
-      <h2>Csomagok <span class="parcel-count">({{ item.parcels.length }} db)</span></h2>
+      <h2>{{ 'Csomagok' | translate }} <span class="parcel-count">({{ item.parcels.length }} {{ 'db' | translate }})</span></h2>
       <div class="parcel-list">
         @for (parcel of item.parcels; track parcel.id; let i = $index) {
           <article class="parcel-card">
-            <h3>{{ i + 1 }}. csomag</h3>
+            <h3>{{ i + 1 }} {{ 'csomag' | translate }}</h3>
             <dl>
-              <div><dt>Súly</dt><dd>{{ parcel.weight | number:'1.2-2' }} kg</dd></div>
-              <div><dt>Törékeny</dt><dd>{{ parcel.fragile ? 'Igen' : 'Nem' }}</dd></div>
-              <div class="description"><dt>Leírás</dt><dd>{{ parcel.description || 'Nincs megadva.' }}</dd></div>
+              <div><dt>{{ 'Súly' | translate }}</dt><dd>{{ parcel.weight | number:'1.2-2' }} kg</dd></div>
+              <div><dt>{{ 'Törékeny' | translate }}</dt><dd>{{ (parcel.fragile ? 'Igen' : 'Nem') | translate }}</dd></div>
+              <div class="description"><dt>{{ 'Leírás' | translate }}</dt><dd>{{ parcel.description || ('Nincs megadva.' | translate) }}</dd></div>
             </dl>
           </article>
         } @empty {
-          <p>Nincs megjeleníthető csomag.</p>
+          <p>{{ 'Nincs megjeleníthető csomag.' | translate }}</p>
         }
       </div>
     </section>

@@ -1,3 +1,4 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, inject} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
@@ -6,7 +7,7 @@ import {LoginCommand} from '../../models/login-command.model';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [TranslatePipe, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

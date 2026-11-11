@@ -1,3 +1,4 @@
+import {TranslatePipe} from '../../i18n/translate.pipe';
 import {Component, computed, DestroyRef, effect, inject, input, output, signal, untracked} from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -11,7 +12,7 @@ import {CourierListItem} from '../../models/user.model';
 
 @Component({
   selector: 'app-shipment-actions',
-  imports: [ReactiveFormsModule],
+  imports: [TranslatePipe, ReactiveFormsModule],
   templateUrl: './shipment-actions.html',
   styles: [`
     :host { display: block; }
